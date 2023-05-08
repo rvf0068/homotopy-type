@@ -22,10 +22,11 @@ def main():
             i = i+1
             if graph.order() > 0 and nx.is_connected(graph):
                 pared_graph = p(graph)
-                h_g = clique_complex(pared_graph).dong_matching()
-                pkg = nx.convert_node_labels_to_integers(p(k(pared_graph)))
-                hkg = clique_complex(pkg).dong_matching()
-                the_file.write(f"|{i}|{pared_graph.order()}|{h_g}|{hkg}|\n")
+                if pared_graph.order() > 1:
+                    h_g = clique_complex(pared_graph).dong_matching()
+                    pkg = nx.convert_node_labels_to_integers(p(k(pared_graph)))
+                    hkg = clique_complex(pkg).dong_matching()
+                    the_file.write(f"|{i}|{pared_graph.order()}|{h_g}|{hkg}|\n")
 
 
 if __name__ == '__main__':
