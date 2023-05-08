@@ -20,7 +20,7 @@ def main():
         the_file.write("|-------+-------+------+-------|\n")
         for graph in all_graphs:
             i = i+1
-            if nx.is_connected(graph):
+            if graph.order() > 0 and nx.is_connected(graph):
                 pared_graph = p(graph)
                 h_g = clique_complex(pared_graph).dong_matching()
                 pkg = nx.convert_node_labels_to_integers(p(k(pared_graph)))
