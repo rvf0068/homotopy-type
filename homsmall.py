@@ -6,6 +6,7 @@ from pycliques.simplicial import clique_complex
 from pycliques.dominated import completely_pared_graph as p
 from pycliques.dominated import has_dominated_vertex, complete_s_collapse, complete_s_collapse_edges
 from pycliques.cliques import clique_graph as k
+from pycliques.helly import is_clique_helly
 
 
 def simplify_ht(g):
@@ -63,7 +64,7 @@ def main():
                 h_g = homotopy_type(pared_graph)
                 pkg = nx.convert_node_labels_to_integers(p(k(pared_graph)))
                 hkg = homotopy_type(pkg)
-                the_file.write(f"|{i}|{pared_graph.order()}|{is_clique_helly(g)}|{h_g}|{hkg}|\n")
+                the_file.write(f"|{i}|{pared_graph.order()}|{is_clique_helly(graph)}|{h_g}|{hkg}|\n")
 
 
 if __name__ == '__main__':
