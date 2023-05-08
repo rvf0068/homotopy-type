@@ -17,7 +17,7 @@ def main():
         for g in all_graphs:
             pg = p(g)
             hg = clique_complex(pg).dong_matching()
-            pkg = p(k(pg))
+            pkg = nx.convert_node_labels_to_integers(p(k(pg)))
             hkg = clique_complex(pkg).dong_matching()
             f.write(f"|{i}|{pg.order()}|{hg}|{hkg}|\n")
             i = i+1
