@@ -19,7 +19,7 @@ def main():
             hg = clique_complex(pg).dong_matching()
             pkg = p(k(pg))
             hkg = clique_complex(pkg).dong_matching()
-            f.write(f"|{i}|{pg.order()}|{hg}|{hkg}|")
+            f.write(f"|{i}|{pg.order()}|{hg}|{hkg}|\n")
 
 
 if __name__ == '__main__':
