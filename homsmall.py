@@ -1,12 +1,14 @@
 """
 Checks the homotopy type of all graphs up to 7 vertices
 """
+import argparse
 import networkx as nx
 from pycliques.simplicial import clique_complex
 from pycliques.dominated import completely_pared_graph as p
 from pycliques.dominated import has_dominated_vertex, complete_s_collapse, complete_s_collapse_edges
 from pycliques.cliques import clique_graph as k
 from pycliques.helly import is_clique_helly
+from pycliques.lists import list_graphs
 
 
 def simplify_ht(g):
@@ -17,6 +19,7 @@ def simplify_ht(g):
 
 
 def _read_dong(dong):
+    """Converts the set given by dong_matching into a TeX string"""
     n = len(dong)
     if n == 0:
         return (True, "Contractible")
@@ -33,6 +36,7 @@ def _read_dong(dong):
 
 
 def homotopy_type(g):
+    """Attempts to get a homotopy type using Dong's matching"""
     cc = clique_complex(g)
     dong1 = cc.dong_matching()
     if _read_dong(dong1)[0]:
@@ -46,13 +50,15 @@ def homotopy_type(g):
             return (dong1, dong2)
 
 
-all_graphs = nx.graph_atlas_g()
-RESULTS = 'homotopy_types.org'
-num_all_graphs = len(all_graphs)
-
-
 def main():
     """Main function"""
+    if args.order == 7:
+        all_graphs = nx.graph_atlas_g()
+        RESULTS = "homotopy_types_up_to_7.org"
+    else:
+        all_graphs = list_graphs(args.order)
+        RESULTS = f"homotopy_types_{args.order}.org"
+
     i = -1
     with open(RESULTS, 'a', encoding="utf8") as the_file:
         the_file.write("| index | order | Helly | HT G | HT KG |\n")
@@ -68,4 +74,8 @@ def main():
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("order", type=int, help="Order of graphs examined")
+    args = parser.parse_args()
+
     main()
