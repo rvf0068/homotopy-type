@@ -4,6 +4,7 @@ Checks the homotopy type of all graphs up to 7 vertices
 import networkx as nx
 from pycliques.simplicial import clique_complex
 from pycliques.dominated import completely_pared_graph as p
+from pycliques.dominated import has_dominated_vertex
 from pycliques.cliques import clique_graph as k
 
 
@@ -20,13 +21,12 @@ def main():
         the_file.write("|-------+-------+------+-------|\n")
         for graph in all_graphs:
             i = i+1
-            if graph.order() > 0 and nx.is_connected(graph):
+            if graph.order() > 1 and nx.is_connected(graph) and not has_dominated_vertex(graph):
                 pared_graph = p(graph)
-                if pared_graph.order() > 1:
-                    h_g = clique_complex(pared_graph).dong_matching()
-                    pkg = nx.convert_node_labels_to_integers(p(k(pared_graph)))
-                    hkg = clique_complex(pkg).dong_matching()
-                    the_file.write(f"|{i}|{pared_graph.order()}|{h_g}|{hkg}|\n")
+                h_g = clique_complex(pared_graph).dong_matching()
+                pkg = nx.convert_node_labels_to_integers(p(k(pared_graph)))
+                hkg = clique_complex(pkg).dong_matching()
+                the_file.write(f"|{i}|{pared_graph.order()}|{h_g}|{hkg}|\n")
 
 
 if __name__ == '__main__':
