@@ -6,10 +6,10 @@ from pycliques.simplicial import clique_complex
 from pycliques.dominated import completely_pared_graph as p
 from pycliques.dominated import has_dominated_vertex
 from pycliques.cliques import clique_graph as k
-from pycliques.lists import graph8c
+from pycliques.lists import list_graphs
 
 
-all_graphs = graph8c
+all_graphs = list_graphs(8)
 RESULTS = 'homotopy_8.org'
 
 
