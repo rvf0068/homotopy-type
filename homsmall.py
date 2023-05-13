@@ -55,9 +55,13 @@ def main():
     if args.order == 7:
         all_graphs = nx.graph_atlas_g()
         RESULTS = "homotopy_types_up_to_7.org"
+        def conditions(graph):
+            return graph.order() > 1 and nx.is_connected(graph) and not has_dominated_vertex(graph) 
     else:
         all_graphs = list_graphs(args.order)
         RESULTS = f"homotopy_types_{args.order}.org"
+        def conditions(graph):
+            return not has_dominated_vertex(graph)
 
     i = -1
     with open(RESULTS, 'a', encoding="utf8") as the_file:
@@ -65,7 +69,7 @@ def main():
         the_file.write("|-------+-------+-------+------+-------|\n")
         for graph in all_graphs:
             i = i+1
-            if graph.order() > 1 and nx.is_connected(graph) and not has_dominated_vertex(graph):
+            if conditions(graph):
                 pared_graph = p(graph)
                 h_g = homotopy_type(pared_graph)
                 pkg = nx.convert_node_labels_to_integers(p(k(pared_graph)))
