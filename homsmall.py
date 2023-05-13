@@ -11,39 +11,40 @@ from pycliques.helly import is_clique_helly
 from pycliques.lists import list_graphs
 
 
-def simplify_ht(g):
-    vg = complete_s_collapse(g)
-    evg = complete_s_collapse_edges(vg)
-    vevg = complete_s_collapse(evg)
-    return vevg
+def simplify_ht(graph):
+    """Simplifies the graph for homotopy type purposes"""
+    v_graph = complete_s_collapse(graph)
+    ev_graph = complete_s_collapse_edges(v_graph)
+    vev_graph = complete_s_collapse(ev_graph)
+    return vev_graph
 
 
 def _read_dong(dong):
     """Converts the set given by dong_matching into a TeX string"""
-    n = len(dong)
-    if n == 0:
+    n_critical = len(dong)
+    if n_critical == 0:
         return (True, "Contractible")
     else:
         list_dong = list(dong)
-        d = len(list_dong[0])
-        if n == 1:
-            return (True, f"\(S^{ {d-1} }\)")
+        dimension = len(list_dong[0])
+        if n_critical == 1:
+            return (True, f"\\(S^{ {dimension-1} }\\)")
         else:
             for simp in list_dong:
-                if len(simp) != d:
+                if len(simp) != dimension:
                     return (False, dong)
-            return (True, f"\(\\vee_{ {n} }S^{ {d-1} }\)")
+            return (True, f"\\(\\vee_{ {n_critical} }S^{ {dimension-1} }\\)")
 
 
-def homotopy_type(g):
+def homotopy_type(graph):
     """Attempts to get a homotopy type using Dong's matching"""
-    cc = clique_complex(g)
-    dong1 = cc.dong_matching()
+    c_complex = clique_complex(graph)
+    dong1 = c_complex.dong_matching()
     if _read_dong(dong1)[0]:
         return _read_dong(dong1)[1]
     else:
-        cc = clique_complex(simplify_ht(g))
-        dong2 = cc.dong_matching()
+        c_complex = clique_complex(simplify_ht(graph))
+        dong2 = c_complex.dong_matching()
         if _read_dong(dong2)[0]:
             return _read_dong(dong2)[1]
         else:
@@ -54,27 +55,27 @@ def main():
     """Main function"""
     if args.order == 7:
         all_graphs = nx.graph_atlas_g()
-        RESULTS = "homotopy_types_up_to_7.org"
+        results = "homotopy_types_up_to_7.org"
         def conditions(graph):
-            return graph.order() > 1 and nx.is_connected(graph) and not has_dominated_vertex(graph) 
+            return graph.order() > 1 and nx.is_connected(graph) and not has_dominated_vertex(graph)
     else:
         all_graphs = list_graphs(args.order)
-        RESULTS = f"homotopy_types_{args.order}.org"
+        results = f"homotopy_types_{args.order}.org"
         def conditions(graph):
             return not has_dominated_vertex(graph)
 
     i = -1
-    with open(RESULTS, 'a', encoding="utf8") as the_file:
+    with open(results, 'a', encoding="utf8") as the_file:
         the_file.write("| index | order | Helly | HT G | HT KG |\n")
         the_file.write("|-------+-------+-------+------+-------|\n")
         for graph in all_graphs:
             i = i+1
             if conditions(graph):
-                pared_graph = p(graph)
-                h_g = homotopy_type(pared_graph)
-                pkg = nx.convert_node_labels_to_integers(p(k(pared_graph)))
+                p_graph = p(graph)
+                h_g = homotopy_type(p_graph)
+                pkg = nx.convert_node_labels_to_integers(p(k(p_graph)))
                 hkg = homotopy_type(pkg)
-                the_file.write(f"|{i}|{pared_graph.order()}|{is_clique_helly(graph)}|{h_g}|{hkg}|\n")
+                the_file.write(f"|{i}|{p_graph.order()}|{is_clique_helly(graph)}|{h_g}|{hkg}|\n")
 
 
 if __name__ == '__main__':
