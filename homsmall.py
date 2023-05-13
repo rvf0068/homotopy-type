@@ -76,7 +76,7 @@ def main():
                 pkg = nx.convert_node_labels_to_integers(p(k(p_graph)))
                 hkg = homotopy_type(pkg)
                 is_helly = is_clique_helly(graph)
-                if not (is_helly and ("S^1" in h_g or "S^1" in hkg)):
+                if not (is_helly and ("S^{1}" in h_g or "S^{1}" in hkg)):
                     the_file.write(f"|{i}|{p_graph.order()}|{is_helly}|{h_g}|{hkg}|\n")
 
 
