@@ -71,14 +71,16 @@ def main():
         for graph in all_graphs:
             i = i+1
             if conditions(graph):
-                p_graph = p(graph)
-                h_g = homotopy_type(p_graph)
-                pkg = nx.convert_node_labels_to_integers(p(k(p_graph)))
-                hkg = homotopy_type(pkg)
-                is_helly = is_clique_helly(graph)
-                is_k_helly = is_clique_helly(pkg)
-                if not (is_helly and ("S^{1}" in h_g or "S^{1}" in hkg)):
-                    the_file.write(f"|{i}|{p_graph.order()}|{is_helly}|{is_k_helly}|{h_g}|{hkg}|\n")
+                p_g = p(graph)
+                h_g = homotopy_type(p_g)
+                k_g = k(p_g, 20)
+                if k_g is not None:
+                    pkg = nx.convert_node_labels_to_integers(p(k_g))
+                    hkg = homotopy_type(pkg)
+                    is_helly = is_clique_helly(graph)
+                    is_k_helly = is_clique_helly(pkg)
+                    if not (is_helly and ("S^{1}" in h_g or "S^{1}" in hkg)):
+                        the_file.write(f"|{i}|{p_g.order()}|{is_helly}|{is_k_helly}|{h_g}|{hkg}|\n")
 
 
 if __name__ == '__main__':
