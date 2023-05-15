@@ -73,7 +73,7 @@ def main():
             if conditions(graph):
                 p_g = p(graph)
                 h_g = homotopy_type(p_g)
-                k_g = k(p_g, 20)
+                k_g = k(p_g, 23)
                 if k_g is not None:
                     pkg = nx.convert_node_labels_to_integers(p(k_g))
                     hkg = homotopy_type(pkg)
