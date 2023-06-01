@@ -3,6 +3,7 @@ Checks the homotopy type of all graphs up to 7 vertices
 """
 import argparse
 import networkx as nx
+import random
 from pycliques.simplicial import clique_complex
 from pycliques.dominated import completely_pared_graph as p
 from pycliques.dominated import has_dominated_vertex, complete_s_collapse, complete_s_collapse_edges
@@ -36,6 +37,10 @@ def _read_dong(dong):
             return (True, f"\\(\\vee_{ {n_critical} }S^{ {dimension-1} }\\)")
 
 
+def _shuff(lista):
+    return random.sample(list(lista), len(lista))
+
+
 def homotopy_type(graph):
     """Attempts to get a homotopy type using Dong's matching"""
     c_complex = clique_complex(graph)
@@ -48,6 +53,12 @@ def homotopy_type(graph):
         if _read_dong(dong2)[0]:
             return _read_dong(dong2)[1]
         else:
+            attempts = 0
+            while attempts < 5:
+                attempts = attempts + 1
+                dong3 = c_complex.dong_matching(order_funcion=_shuff)
+                if _read_dong(dong3)[0]:
+                    return _read_dong(dong3)[1]
             return (dong1, dong2)
 
 
@@ -56,14 +67,18 @@ def main():
     if args.order == 7:
         all_graphs = nx.graph_atlas_g()
         results = "homotopy_types_up_to_7.org"
+
         def conditions(graph):
-            return graph.order() > 1 and nx.is_connected(graph) and not has_dominated_vertex(graph)
+            return (graph.order() > 1
+                    and nx.is_connected(graph)
+                    and not has_dominated_vertex(graph)
+                    )
     else:
         all_graphs = list_graphs(args.order)
         results = f"homotopy_types_{args.order}.org"
+
         def conditions(graph):
             return not has_dominated_vertex(graph)
-
     i = -1
     with open(results, 'a', encoding="utf8") as the_file:
         the_file.write("| index | order | Helly | K Helly | HT G | HT KG |\n")
