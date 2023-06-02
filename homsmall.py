@@ -96,6 +96,10 @@ def max_degree(graph):
     return max(degrees.values())
 
 
+heading = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
+           "|-------+-------+-------+-------+---------+------+-------|\n")
+
+
 def main():
     """Main function"""
     if args.order == 7:
@@ -117,8 +121,7 @@ def main():
                     and max_degree(graph) >= 5)
     i = -1
     with open(results, 'a', encoding="utf8") as the_file:
-        the_file.write("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
-                       "|-------+-------+-------+-------+---------+------+-------|\n")
+        the_file.write(heading)
         for graph in all_graphs:
             i = i+1
             if conditions(graph):
@@ -131,8 +134,8 @@ def main():
                     is_helly = is_clique_helly(graph)
                     is_k_helly = is_clique_helly(pkg)
                     if (not (is_helly and
-                            ("S^{1}" in h_g or "S^{1}" in hkg)
-                            )) and not (
+                             ("S^{1}" in h_g or "S^{1}" in hkg)
+                             )) and not (
                                 is_k_helly and h_g == hkg and "S^{1}" in h_g):
                         the_file.write("|" + str(i) +
                                        "|" + str(p_g.order()) +
@@ -143,7 +146,8 @@ def main():
                                        "|" + str(hkg) +
                                        "|\n")
                 else:
-                    the_file.write("|Clique graph has at least 23 vertices||||||\n")
+                    c_big = "|Clique graph has at least 23 vertices||||||\n"
+                    the_file.write(c_big)
 
 
 if __name__ == '__main__':
