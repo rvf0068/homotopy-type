@@ -1,0 +1,441 @@
+#+title: Homotopy type of small graphs
+#+property: header-args:jupyter-python :exports both :cache yes :session hom_small :results raw drawer 
+#+startup: inlineimages
+
+#+begin_src jupyter-python
+import networkx as nx
+from subprocess import PIPE, run
+
+import matplotlib.pyplot as plt
+from pycliques.cliques import clique_graph as k
+from pycliques.dominated import *
+p = completely_pared_graph
+from pycliques.helly import *
+from pycliques.retractions import *
+from pycliques.named import *
+snubd = snub_dysphenoid
+from pycliques.special import *
+from pycliques.small import *
+from pycliques.coaffinations import *
+from pycliques.cutpoints import *
+from pycliques.simplicial import *
+from pycliques.lists import *
+
+# gap lists are indexed from 1
+def gap_adjacency_list(graph):
+    graph = nx.convert_node_labels_to_integers(graph)
+    pre_list = [list(graph[i]) for i in graph.nodes()]
+    return [[i+1 for i in neigh] for neigh in pre_list]
+
+def gap_homology(graph):
+    adj = gap_adjacency_list(graph)
+    command = ["/home/rafael/Dropbox/python/helly/homology.sh", str(adj)]
+    result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    return "".join(result.stdout.split('\n')[2:])
+#+end_src
+
+#+RESULTS[3617c0f7763408b466bdb682a7ecdb9530f033ca]:
+
+#+begin_src jupyter-python
+def simplify_ht(g):
+    vg = complete_s_collapse(g)
+    evg = complete_s_collapse_edges(vg)
+    vevg = complete_s_collapse(evg)
+    return vevg
+
+def _read_dong(dong):
+    n = len(dong)
+    if n == 0:
+        return (True, "Contractible")
+    else:
+        list_dong = list(dong)
+        d = len(list_dong[0])
+        if n == 1:
+            return (True, f"\(S^{ {d-1} }\)")
+        else:
+            for simp in list_dong:
+                if len(simp) != d:
+                    return (False, dong)
+            return (True, "\(\\vee_{"+str(n)+"}S^{"+str(d-1)+"}\)")
+    
+
+def homotopy_type(g):
+    cc = clique_complex(g)
+    dong1 = cc.dong_matching()
+    if _read_dong(dong1)[0]:
+        return _read_dong(dong1)[1]
+    else:
+        cc = clique_complex(simplify_ht(g))
+        dong2 = cc.dong_matching()
+        if _read_dong(dong2)[0]:
+            return _read_dong(dong2)[1]
+        else:
+            return (dong1, dong2)
+#+end_src
+
+#+RESULTS[707698616e7992acf8707420b3aa395f7aee163b]:
+
+* Up to 7 vertices
+
+#+begin_src jupyter-python
+upto7 = nx.graph_atlas_g()
+len(upto7)
+#+end_src
+
+#+RESULTS[8051fa61f947e2c068a897817044eb0570d8604a]:
+: 1253
+
+#+begin_src jupyter-python
+g = upto7[1137]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[c9fe319ebf9d30695037234c951654d329a3574c]:
+[[file:./.ob-jupyter/50fd9d167af8027b51c8019061867bc84259deea.png]]
+
+#+begin_src jupyter-python
+def is_shedding_vertex(complex, v):
+    link = complex.link(v)
+    deletion = complex.deletion(v)
+    facets_deletion = deletion.facet_set
+    faces_link = link.all_simplices()
+    intersection = facets_deletion & faces_link
+    return len(intersection) == 0
+
+def is_vertex_decomposable(complex):
+    if len(complex.facet_set) == 1:
+        return True
+    else:
+        for v in complex.vertex_set:
+            if (is_shedding_vertex(complex, v) and
+                is_vertex_decomposable(complex.link(v)) and
+                is_vertex_decomposable(complex.deletion(v))):
+                return True
+        return False    
+
+cc = clique_complex(g)
+is_shedding_vertex(cc, 1), is_vertex_decomposable(cc)
+#+end_src
+
+#+RESULTS[e650754938718e14023c759fcf10ecb37ae6347a]:
+| True | True |
+
+#+begin_src jupyter-python
+kg = k(g)
+cckg = clique_complex(kg)
+is_vertex_decomposable(cckg)
+#+end_src
+
+#+RESULTS[fe619416dff41481dd8f7950e1fd660a7761e8f8]:
+: False
+
+#+begin_src jupyter-python
+htkg = simplify_ht(kg)
+is_vertex_decomposable(clique_complex(htkg))
+#+end_src
+
+#+RESULTS[20f1e59fa25f40cc00f52125cdd0b2ad915d11cd]:
+: True
+
+#+begin_src jupyter-python
+P = nx.strong_product(nx.cycle_graph(4), nx.cycle_graph(4))
+is_vertex_decomposable(clique_complex(P))
+#+end_src
+
+#+RESULTS[a1e1f5051d27cf26dd4396f031fcac7b4272337b]:
+: False
+
+
+* 8 vertices
+
+#+begin_src jupyter-python
+list8 = list_graphs(8)
+len(list8)
+#+end_src
+
+#+RESULTS[d76602ab756c0342b08a4b16a434bd2ddb99e8d6]:
+: 11117
+
+** 3962
+
+#+begin_src jupyter-python
+g = list8[3962]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[9f214fdc69e15dd30e9ef36db0e3f55b8a9b838b]:
+[[file:./.ob-jupyter/b30bd92408ca8075a2f447cf5579d658a78f54e8.png]]
+
+#+begin_src jupyter-python
+h = nx.induced_subgraph(g, [0, 1, 4, 5, 6, 7])
+nx.draw(h, with_labels=True)
+#+end_src
+
+#+RESULTS[be917659858219844fa43238696d514c12fb18f7]:
+[[file:./.ob-jupyter/86b1a38162d776cca9f1bd5d94e593f7f04581d3.png]]
+
+It is an octahedron with two lines joining antipodal vertices.
+
+#+begin_src jupyter-python
+is_vertex_decomposable(clique_complex(g))
+#+end_src
+
+#+RESULTS[4cadd543fdf1d2a50cb795b93eba3a33f6613148]:
+: True
+
+#+begin_src jupyter-python
+kg = k(g)
+is_vertex_decomposable(clique_complex(kg))
+#+end_src
+
+#+RESULTS[e4a74f9a73f3590f42098de77160fec0472bd427]:
+: False
+
+#+begin_src jupyter-python
+htkg = simplify_ht(kg)
+is_vertex_decomposable(clique_complex(htkg))
+#+end_src
+
+#+RESULTS:
+: True
+
+** 4478
+
+#+begin_src jupyter-python
+g = list8[4478]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/3b942449bb9f2de188e0f716055a8c62a8931bb7.png]]
+
+#+begin_src jupyter-python
+h = nx.induced_subgraph(g, [0, 1, 4, 5, 6, 7])
+nx.draw(h, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/d51f7bbbf65ecabaf0007631b2bd6a387936e909.png]]
+
+Again it is an octahedron with two lines.
+
+#+begin_src jupyter-python
+is_vertex_decomposable(clique_complex(g))
+#+end_src
+
+#+RESULTS[4cadd543fdf1d2a50cb795b93eba3a33f6613148]:
+: True
+
+#+begin_src jupyter-python
+kg = k(g)
+is_vertex_decomposable(clique_complex(kg))
+#+end_src
+
+#+RESULTS[e4a74f9a73f3590f42098de77160fec0472bd427]:
+: False
+
+#+begin_src jupyter-python
+htkg = simplify_ht(kg)
+is_vertex_decomposable(clique_complex(htkg))
+#+end_src
+
+#+RESULTS:
+: True
+
+** 4517
+
+#+begin_src jupyter-python
+g = list8[4517]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/35663a48f18e3b4e785692ad3fc8130cf6a2286f.png]]
+
+#+begin_src jupyter-python
+h = nx.induced_subgraph(g, [0, 2, 4, 5, 6, 7])
+nx.draw(h, with_labels=True)
+#+end_src
+
+#+RESULTS[47cc161f617903dfa929ef86807e4eaebb96e907]:
+[[file:./.ob-jupyter/55879994f4ec07442ea6b5a5452eb1d3c99c5bbb.png]]
+
+An octahedron with a line, and an extra vertex joined to four points in the octahedron
+
+#+begin_src jupyter-python
+is_vertex_decomposable(clique_complex(g))
+#+end_src
+
+#+RESULTS[4cadd543fdf1d2a50cb795b93eba3a33f6613148]:
+: True
+
+#+begin_src jupyter-python
+kg = k(g)
+is_vertex_decomposable(clique_complex(kg))
+#+end_src
+
+#+RESULTS[e4a74f9a73f3590f42098de77160fec0472bd427]:
+: False
+
+#+begin_src jupyter-python
+htkg = simplify_ht(kg)
+is_vertex_decomposable(clique_complex(htkg))
+#+end_src
+
+#+RESULTS:
+: True
+
+** 6323
+
+#+begin_src jupyter-python
+g = list8[6323]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/d3ed82f99f2d492093b3ab9f6e539f96c444609d.png]]
+
+#+begin_src jupyter-python
+h = nx.induced_subgraph(g, [1, 2, 4, 5, 6, 7])
+nx.draw(h, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/da647d39dccb69d818f25ea6eabac35c596889d0.png]]
+
+An octahedron with a big line.
+
+#+begin_src jupyter-python
+is_vertex_decomposable(clique_complex(g))
+#+end_src
+
+#+RESULTS[4cadd543fdf1d2a50cb795b93eba3a33f6613148]:
+: True
+
+#+begin_src jupyter-python
+kg = k(g)
+is_vertex_decomposable(clique_complex(kg))
+#+end_src
+
+#+RESULTS[e4a74f9a73f3590f42098de77160fec0472bd427]:
+: False
+
+#+begin_src jupyter-python
+htkg = simplify_ht(kg)
+is_vertex_decomposable(clique_complex(htkg))
+#+end_src
+
+#+RESULTS:
+: True
+
+** 6484
+
+#+begin_src jupyter-python
+g = list8[6484]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[9c3a7f25f35f8902d0c64a3c987369d410ea239b]:
+[[file:./.ob-jupyter/94a6cd3d319a73e34291a07029d4a7d0bd7aadf9.png]]
+
+#+begin_src jupyter-python
+h = nx.induced_subgraph(g, [1, 2, 4, 5, 6, 7])
+nx.draw(h, with_labels=True)
+#+end_src
+
+#+RESULTS[209fa2c4fb95da05deeda0ee53e22c1b20fda4ea]:
+[[file:./.ob-jupyter/f7e5ff1e17dcbab824d3560822d597ff92e6c8cf.png]]
+
+Another octahedron with a line.
+
+#+begin_src jupyter-python
+is_vertex_decomposable(clique_complex(g))
+#+end_src
+
+#+RESULTS[4cadd543fdf1d2a50cb795b93eba3a33f6613148]:
+: True
+
+#+begin_src jupyter-python
+htkg = simplify_ht(k(g))
+is_vertex_decomposable(clique_complex(htkg))
+#+end_src
+
+#+RESULTS:
+: True
+
+
+** 7454
+
+#+begin_src jupyter-python
+g = list8[7454]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[e0b92fa6ef815dea41f8de32447ff0e3d6ae1f45]:
+[[file:./.ob-jupyter/f41457243e1bf503933481eea5111df5636d90eb.png]]
+
+#+begin_src jupyter-python
+h = nx.induced_subgraph(g, [1, 2, 4, 5, 6, 7])
+nx.draw(h, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/bd276f0152a5fff39b7540f16301488f7a004a0b.png]]
+
+Octahedron with lines
+
+#+begin_src jupyter-python
+is_vertex_decomposable(clique_complex(g))
+#+end_src
+
+#+RESULTS[4cadd543fdf1d2a50cb795b93eba3a33f6613148]:
+: True
+
+#+begin_src jupyter-python
+htkg = simplify_ht(k(g))
+is_vertex_decomposable(clique_complex(htkg))
+#+end_src
+
+#+RESULTS:
+: True
+
+** 7499
+
+#+begin_src jupyter-python
+g = list8[7499]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[d54a3197b566618ab22aef998d6efb61705f8893]:
+[[file:./.ob-jupyter/63933cbfaee42ac3f10941173571bf716eea8775.png]]
+
+#+begin_src jupyter-python
+h = nx.induced_subgraph(g, [1, 2, 4, 5, 6, 7])
+nx.draw(h, with_labels=True)
+#+end_src
+
+#+RESULTS[209fa2c4fb95da05deeda0ee53e22c1b20fda4ea]:
+[[file:./.ob-jupyter/e629ca8f3a29f5e7097513a88d6383151fe31453.png]]
+
+Octahedron with lines
+
+#+begin_src jupyter-python
+is_vertex_decomposable(clique_complex(g))
+#+end_src
+
+#+RESULTS[4cadd543fdf1d2a50cb795b93eba3a33f6613148]:
+: True
+
+#+begin_src jupyter-python
+htkg = simplify_ht(k(g))
+is_vertex_decomposable(clique_complex(htkg))
+#+end_src
+
+#+RESULTS:
+: True
+
+* COMMENT Local Variables
+
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:
