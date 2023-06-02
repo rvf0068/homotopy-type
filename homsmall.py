@@ -2,8 +2,8 @@
 Checks the homotopy type of all graphs up to 7 vertices
 """
 import argparse
-import networkx as nx
 import random
+import networkx as nx
 from pycliques.simplicial import clique_complex
 from pycliques.dominated import completely_pared_graph as p
 from pycliques.dominated import has_dominated_vertex, complete_s_collapse, complete_s_collapse_edges
