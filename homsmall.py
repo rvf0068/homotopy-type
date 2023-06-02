@@ -117,8 +117,8 @@ def main():
                     and max_degree(graph) >= 5)
     i = -1
     with open(results, 'a', encoding="utf8") as the_file:
-        the_file.write("| index | order | max d | Helly | K Helly | HT G | HT KG |\n")
-        the_file.write("|-------+-------+-------+-------+---------+------+-------|\n")
+        the_file.write("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
+                       "|-------+-------+-------+-------+---------+------+-------|\n")
         for graph in all_graphs:
             i = i+1
             if conditions(graph):
@@ -130,7 +130,10 @@ def main():
                     hkg = homotopy_type(pkg)
                     is_helly = is_clique_helly(graph)
                     is_k_helly = is_clique_helly(pkg)
-                    if not (is_helly and ("S^{1}" in h_g or "S^{1}" in hkg)):
+                    if not (is_helly and
+                            ("S^{1}" in h_g or "S^{1}" in hkg)
+                            ) or (
+                                is_k_helly and h_g == hkg and "S^{1}" in h_g):
                         the_file.write("|" + str(i) +
                                        "|" + str(p_g.order()) +
                                        "|" + str(max_degree(graph)) +
