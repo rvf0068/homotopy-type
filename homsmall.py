@@ -130,9 +130,9 @@ def main():
                     hkg = homotopy_type(pkg)
                     is_helly = is_clique_helly(graph)
                     is_k_helly = is_clique_helly(pkg)
-                    if not (is_helly and
+                    if (not (is_helly and
                             ("S^{1}" in h_g or "S^{1}" in hkg)
-                            ) or (
+                            )) and not (
                                 is_k_helly and h_g == hkg and "S^{1}" in h_g):
                         the_file.write("|" + str(i) +
                                        "|" + str(p_g.order()) +
