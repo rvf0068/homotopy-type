@@ -106,6 +106,7 @@ def main():
             return (graph.order() > 1
                     and nx.is_connected(graph)
                     and not has_dominated_vertex(graph)
+                    and max_degree(graph) >= 5
                     )
     else:
         all_graphs = list_graphs(args.order)
