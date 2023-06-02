@@ -56,7 +56,7 @@ def homotopy_type(graph):
             attempts = 0
             while attempts < 5:
                 attempts = attempts + 1
-                dong3 = c_complex.dong_matching(order_funcion=_shuff)
+                dong3 = c_complex.dong_matching(order_function=_shuff)
                 if _read_dong(dong3)[0]:
                     return _read_dong(dong3)[1]
             return (dong1, dong2)
