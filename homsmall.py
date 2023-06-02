@@ -91,6 +91,7 @@ def betti_numbers(graph):
 
 
 def max_degree(graph):
+    """Returns the maximum degree of a graph"""
     degrees = dict(graph.degree())
     return max(degrees.values())
 
@@ -112,11 +113,11 @@ def main():
 
         def conditions(graph):
             return (not has_dominated_vertex(graph)
-                    and max_degree(graph) >= 6) 
+                    and max_degree(graph) >= 5)
     i = -1
     with open(results, 'a', encoding="utf8") as the_file:
-        the_file.write("| index | order | Helly | K Helly | HT G | HT KG |\n")
-        the_file.write("|-------+-------+-------+---------+------+-------|\n")
+        the_file.write("| index | order | max d | Helly | K Helly | HT G | HT KG |\n")
+        the_file.write("|-------+-------+-------+-------+---------+------+-------|\n")
         for graph in all_graphs:
             i = i+1
             if conditions(graph):
@@ -131,6 +132,7 @@ def main():
                     if not (is_helly and ("S^{1}" in h_g or "S^{1}" in hkg)):
                         the_file.write("|" + str(i) +
                                        "|" + str(p_g.order()) +
+                                       "|" + str(max_degree(graph)) +
                                        "|" + str(is_helly) +
                                        "|" + str(is_k_helly) +
                                        "|" + str(h_g) +
