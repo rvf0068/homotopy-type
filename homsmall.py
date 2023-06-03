@@ -44,12 +44,12 @@ def _read_dong(dong):
 
 def _read_betti_numbers(bettis):
     betti = "\\("
-    for index in range(len(bettis)):
-        if bettis[index] != 0:
-            if bettis[index] == 1:
+    for index, betti_number in enumerate(bettis):
+        if betti_number != 0:
+            if betti_number == 1:
                 betti = betti + f"S^{ {index} }"
             else:
-                betti = betti + f"\\vee_{ {bettis[index]} }S^{ {index} }"
+                betti = betti + f"\\vee_{ {betti_number} }S^{ {index} }"
             betti = betti + "\\vee "
     return betti[:-5] + "\\)"
 
@@ -135,7 +135,7 @@ def is_vertex_decomposable(the_complex):
         return False
 
 
-heading = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
+HEADING = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
            "|-------+-------+-------+-------+---------+------+-------|\n")
 
 
@@ -145,7 +145,7 @@ def main():
         all_graphs = nx.graph_atlas_g()
         results = "homotopy_types_up_to_7.org"
 
-        def conditions(graph):
+        def conditions(graph, i):
             return (graph.order() > 1
                     and nx.is_connected(graph)
                     and not has_dominated_vertex(graph)
@@ -155,17 +155,18 @@ def main():
         all_graphs = list_graphs(args.order)
         results = f"homotopy_types_{args.order}.org"
 
-        def conditions(graph):
+        def conditions(graph, i):
             return (not has_dominated_vertex(graph)
-                    and max_degree(graph) >= 5)
+                    and max_degree(graph) >= 5
+                    and i > args.start)
     i = -1
     with open(results, 'a', encoding="utf8") as the_file:
-        the_file.write(heading)
+        the_file.write(HEADING)
         for graph in all_graphs:
+            i = i+1
             print("\r", end='')
             print(f"Currently on graph {i}", end='', flush=True)
-            i = i+1
-            if conditions(graph):
+            if conditions(graph, i):
                 p_g = p(graph)
                 h_g = homotopy_type(p_g)
                 k_g = k(p_g, 23)
@@ -189,11 +190,13 @@ def main():
                 else:
                     c_big = "|Clique graph has at least 23 vertices||||||\n"
                     the_file.write(c_big)
+    print("\n")
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("order", type=int, help="Order of graphs examined")
+    parser.add_argument("--start", type=int, help="Index to start", default=-1)
     args = parser.parse_args()
 
     main()
