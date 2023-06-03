@@ -1,5 +1,5 @@
 """
-Checks the homotopy type of all graphs up to 7 vertices
+Calculates the homotopy type of graphs and their clique graphs
 """
 import argparse
 import random
@@ -42,12 +42,25 @@ def _read_dong(dong):
             return (True, f"\\(\\vee_{ {n_critical} }S^{ {dimension-1} }\\)")
 
 
+def _read_betti_numbers(bettis):
+    betti = "\\("
+    for index in range(len(bettis)):
+        if bettis[index] != 0:
+            if bettis[index] == 1:
+                betti = betti + f"S^{ {index} }"
+            else:
+                betti = betti + f"\\vee_{ {bettis[index]} }S^{ {index} }"
+            betti = betti + "\\vee "
+    return betti[:-5] + "\\)"
+
+
 def _shuff(lista):
     return random.sample(list(lista), len(lista))
 
 
 def homotopy_type(graph):
-    """Attempts to get a homotopy type using Dong's matching"""
+    """Attempts to get a homotopy type using Dong's matching and vertex
+    decomposability"""
     c_complex = clique_complex(graph)
     dong1 = c_complex.dong_matching()
     if _read_dong(dong1)[0]:
@@ -65,7 +78,10 @@ def homotopy_type(graph):
                 dong3 = c_complex.dong_matching(order_function=_shuff)
                 if _read_dong(dong3)[0]:
                     return _read_dong(dong3)[1]
-            return betti_numbers(s_ht)
+            if is_vertex_decomposable(c_complex):    
+                return _read_betti_numbers(betti_numbers(s_ht))
+            else:
+                return betti_numbers(s_ht)
 
 
 def dimension_sc(s_complex):
@@ -94,6 +110,27 @@ def max_degree(graph):
     """Returns the maximum degree of a graph"""
     degrees = dict(graph.degree())
     return max(degrees.values())
+
+
+def is_shedding_vertex(complex, v):
+    link = complex.link(v)
+    deletion = complex.deletion(v)
+    facets_deletion = deletion.facet_set
+    faces_link = link.all_simplices()
+    intersection = facets_deletion & faces_link
+    return len(intersection) == 0
+
+
+def is_vertex_decomposable(complex):
+    if len(complex.facet_set) == 1:
+        return True
+    else:
+        for v in complex.vertex_set:
+            if (is_shedding_vertex(complex, v) and
+                is_vertex_decomposable(complex.link(v)) and
+                    is_vertex_decomposable(complex.deletion(v))):
+                return True
+        return False
 
 
 heading = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
