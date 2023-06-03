@@ -3,77 +3,43 @@
 #+startup: inlineimages
 
 #+begin_src jupyter-python
+import argparse
+import random
+import mogutda
 import networkx as nx
-from subprocess import PIPE, run
-
-import matplotlib.pyplot as plt
+from pycliques.simplicial import clique_complex
+from pycliques.dominated import completely_pared_graph as p
+from pycliques.dominated import (
+    has_dominated_vertex,
+    complete_s_collapse,
+    complete_s_collapse_edges
+    )
 from pycliques.cliques import clique_graph as k
-from pycliques.dominated import *
-p = completely_pared_graph
-from pycliques.helly import *
-from pycliques.retractions import *
-from pycliques.named import *
-snubd = snub_dysphenoid
-from pycliques.special import *
-from pycliques.small import *
-from pycliques.coaffinations import *
-from pycliques.cutpoints import *
-from pycliques.simplicial import *
-from pycliques.lists import *
+from pycliques.helly import is_clique_helly
+from pycliques.lists import list_graphs
 
-# gap lists are indexed from 1
-def gap_adjacency_list(graph):
-    graph = nx.convert_node_labels_to_integers(graph)
-    pre_list = [list(graph[i]) for i in graph.nodes()]
-    return [[i+1 for i in neigh] for neigh in pre_list]
-
-def gap_homology(graph):
-    adj = gap_adjacency_list(graph)
-    command = ["/home/rafael/Dropbox/python/helly/homology.sh", str(adj)]
-    result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-    return "".join(result.stdout.split('\n')[2:])
+from homsmall import *
 #+end_src
 
-#+RESULTS[3617c0f7763408b466bdb682a7ecdb9530f033ca]:
+#+RESULTS[8848485fd3ba00d1b41ce3e537e7b6c9a0c56924]:
+
+* Test
 
 #+begin_src jupyter-python
-def simplify_ht(g):
-    vg = complete_s_collapse(g)
-    evg = complete_s_collapse_edges(vg)
-    vevg = complete_s_collapse(evg)
-    return vevg
+def _read_betti_numbers(bettis):
+    betti = "\\("
+    for index in range(len(bettis)):
+        if bettis[index] != 0:
+            if bettis[index] == 1:
+                betti = betti + f"S^{ {index} }"
+            else:
+                betti = betti + f"\\vee_{ {bettis[index]} }S^{ {index} }"
+            betti = betti + "\\vee "        
+    return betti[:-5] + "\\)"
 
-def _read_dong(dong):
-    n = len(dong)
-    if n == 0:
-        return (True, "Contractible")
-    else:
-        list_dong = list(dong)
-        d = len(list_dong[0])
-        if n == 1:
-            return (True, f"\(S^{ {d-1} }\)")
-        else:
-            for simp in list_dong:
-                if len(simp) != d:
-                    return (False, dong)
-            return (True, "\(\\vee_{"+str(n)+"}S^{"+str(d-1)+"}\)")
-    
-
-def homotopy_type(g):
-    cc = clique_complex(g)
-    dong1 = cc.dong_matching()
-    if _read_dong(dong1)[0]:
-        return _read_dong(dong1)[1]
-    else:
-        cc = clique_complex(simplify_ht(g))
-        dong2 = cc.dong_matching()
-        if _read_dong(dong2)[0]:
-            return _read_dong(dong2)[1]
-        else:
-            return (dong1, dong2)
+_read_betti_numbers([0,0,0,0,0,3])
 #+end_src
 
-#+RESULTS[707698616e7992acf8707420b3aa395f7aee163b]:
 
 * Up to 7 vertices
 
@@ -94,27 +60,7 @@ nx.draw(g, with_labels=True)
 [[file:./.ob-jupyter/50fd9d167af8027b51c8019061867bc84259deea.png]]
 
 #+begin_src jupyter-python
-def is_shedding_vertex(complex, v):
-    link = complex.link(v)
-    deletion = complex.deletion(v)
-    facets_deletion = deletion.facet_set
-    faces_link = link.all_simplices()
-    intersection = facets_deletion & faces_link
-    return len(intersection) == 0
-
-def is_vertex_decomposable(complex):
-    if len(complex.facet_set) == 1:
-        return True
-    else:
-        for v in complex.vertex_set:
-            if (is_shedding_vertex(complex, v) and
-                is_vertex_decomposable(complex.link(v)) and
-                is_vertex_decomposable(complex.deletion(v))):
-                return True
-        return False    
-
-cc = clique_complex(g)
-is_shedding_vertex(cc, 1), is_vertex_decomposable(cc)
+is_vertex_decomposable(cc)
 #+end_src
 
 #+RESULTS[e650754938718e14023c759fcf10ecb37ae6347a]:
@@ -136,15 +82,6 @@ is_vertex_decomposable(clique_complex(htkg))
 
 #+RESULTS[20f1e59fa25f40cc00f52125cdd0b2ad915d11cd]:
 : True
-
-#+begin_src jupyter-python
-P = nx.strong_product(nx.cycle_graph(4), nx.cycle_graph(4))
-is_vertex_decomposable(clique_complex(P))
-#+end_src
-
-#+RESULTS[a1e1f5051d27cf26dd4396f031fcac7b4272337b]:
-: False
-
 
 * 8 vertices
 
