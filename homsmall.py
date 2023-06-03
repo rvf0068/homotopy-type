@@ -162,6 +162,8 @@ def main():
     with open(results, 'a', encoding="utf8") as the_file:
         the_file.write(heading)
         for graph in all_graphs:
+            print("\r", end='')
+            print(f"Currently on graph {i}", end='', flush=True)
             i = i+1
             if conditions(graph):
                 p_g = p(graph)

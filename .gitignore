@@ -2,3 +2,5 @@
 *.tex
 *.pdf
 /.ob-jupyter/
+/__pycache__/
+/ltximg/
