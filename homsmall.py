@@ -78,7 +78,7 @@ def homotopy_type(graph):
                 dong3 = c_complex.dong_matching(order_function=_shuff)
                 if _read_dong(dong3)[0]:
                     return _read_dong(dong3)[1]
-            if is_vertex_decomposable(c_complex):    
+            if is_vertex_decomposable(c_complex):
                 return _read_betti_numbers(betti_numbers(s_ht))
             else:
                 return betti_numbers(s_ht)
@@ -112,23 +112,25 @@ def max_degree(graph):
     return max(degrees.values())
 
 
-def is_shedding_vertex(complex, v):
-    link = complex.link(v)
-    deletion = complex.deletion(v)
+def is_shedding_vertex(the_complex, vertex):
+    """Returns True if vertex is a shedding vertex of the complex"""
+    link = the_complex.link(vertex)
+    deletion = the_complex.deletion(vertex)
     facets_deletion = deletion.facet_set
     faces_link = link.all_simplices()
     intersection = facets_deletion & faces_link
     return len(intersection) == 0
 
 
-def is_vertex_decomposable(complex):
-    if len(complex.facet_set) == 1:
+def is_vertex_decomposable(the_complex):
+    """Returns True if the complex is vertex decomposable"""
+    if len(the_complex.facet_set) == 1:
         return True
     else:
-        for v in complex.vertex_set:
-            if (is_shedding_vertex(complex, v) and
-                is_vertex_decomposable(complex.link(v)) and
-                    is_vertex_decomposable(complex.deletion(v))):
+        for vertex in the_complex.vertex_set:
+            if (is_shedding_vertex(the_complex, vertex) and
+                is_vertex_decomposable(the_complex.link(vertex)) and
+                    is_vertex_decomposable(the_complex.deletion(vertex))):
                 return True
         return False
 

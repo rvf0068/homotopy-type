@@ -1,40 +1,40 @@
 | index | order | max d | Helly | K Helly | HT G | HT KG |
 |-------+-------+-------+-------+---------+------+-------|
-|3962|8|6|False|False|[0, 2, 1]|[0, 2, 0, 1]|
+|3962|8|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
 |4046|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |4204|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |4288|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |4371|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |4431|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
-|4478|8|5|False|False|[0, 2, 1]|[0, 2, 0, 1]|
-|4517|8|6|False|False|[0, 1, 2]|[0, 1, 0, 4]|
+|4478|8|5|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|4517|8|6|False|False|\(S^{1}\vee \vee_{2}S^{2}\)|\(S^{1}\vee \vee_{4}S^{3}\)|
 |4558|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |4559|8|5|False|False|\(S^{1}\)|\(S^{1}\)|
 |4583|8|6|False|False|\(\vee_{3}S^{2}\)|\(\vee_{9}S^{3}\)|
-|6323|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
-|6484|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
+|6323|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|6484|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
 |7307|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |7327|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |7397|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
-|7454|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
-|7499|8|5|False|False|[0, 2, 1]|[0, 2, 0, 1]|
+|7454|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|7499|8|5|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
 |7868|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |7897|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
-|7901|8|6|False|False|[0, 1, 1]|[0, 1, 1]|
+|7901|8|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{2}\)|
 |8298|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |8303|8|5|False|False|\(S^{1}\)|\(S^{1}\)|
 |8321|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |8326|8|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
 |8372|8|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
 |9179|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
-|9335|8|5|False|False|[0, 1, 1]|[0, 1, 1]|
-|9370|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
-|9406|8|6|False|False|\(\vee_{2}S^{2}\)|[0, 0, 1, 1]|
+|9335|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{2}\)|
+|9370|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|9406|8|6|False|False|\(\vee_{2}S^{2}\)|\(S^{2}\vee S^{3}\)|
 |9413|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |9468|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |9470|8|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
-|9480|8|5|False|False|[0, 3, 1]|[0, 3, 0, 1]|
-|9505|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
+|9480|8|5|False|False|\(\vee_{3}S^{1}\vee S^{2}\)|\(\vee_{3}S^{1}\vee S^{3}\)|
+|9505|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
 |9569|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |9588|8|5|False|False|\(S^{1}\)|\(S^{1}\)|
 |9654|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
@@ -45,38 +45,38 @@
 |9833|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |9859|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |9899|8|5|False|False|\(S^{1}\)|\(S^{1}\)|
-|9931|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
+|9931|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
 |10082|8|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
-|10116|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
-|10118|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
+|10116|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|10118|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
 |10141|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
-|10153|8|5|False|False|[0, 2, 1]|[0, 2, 0, 1]|
-|10155|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
+|10153|8|5|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|10155|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
 |10189|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
 |10195|8|5|False|True|Contractible|Contractible|
 |10226|8|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
 |10237|8|5|False|False|\(S^{1}\)|\(S^{1}\)|
-|10279|8|5|False|False|[0, 1, 2]|[0, 1, 0, 4]|
-|10313|8|5|False|False|[0, 1, 1]|[0, 1, 1]|
+|10279|8|5|False|False|\(S^{1}\vee \vee_{2}S^{2}\)|\(S^{1}\vee \vee_{4}S^{3}\)|
+|10313|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{2}\)|
 |10413|8|6|False|False|\(\vee_{3}S^{2}\)|\(\vee_{7}S^{3}\)|
 |10439|8|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
-|10440|8|5|False|False|[0, 2, 1]|[0, 2, 0, 1]|
-|10461|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
-|10464|8|5|False|False|[0, 2, 2]|[0, 2, 0, 4]|
+|10440|8|5|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|10461|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|10464|8|5|False|False|\(\vee_{2}S^{1}\vee \vee_{2}S^{2}\)|\(\vee_{2}S^{1}\vee \vee_{4}S^{3}\)|
 |10468|8|6|False|False|\(\vee_{4}S^{2}\)|\(\vee_{14}S^{3}\)|
 |10481|8|5|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{2}\)|
 |10820|8|5|False|True|Contractible|Contractible|
 |10829|8|5|False|False|\(S^{2}\)|\(S^{2}\)|
 |10913|8|5|False|True|Contractible|Contractible|
 |11013|8|5|False|True|Contractible|Contractible|
-|11015|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
+|11015|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
 |11019|8|5|False|True|Contractible|Contractible|
-|11030|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
-|11033|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
+|11030|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|11033|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
 |11045|8|5|False|False|\(S^{2}\)|\(S^{2}\)|
 |11047|8|5|False|False|\(S^{2}\)|\(S^{2}\)|
-|11056|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
-|11061|8|5|False|False|[0, 1, 1]|[0, 1, 0, 1]|
+|11056|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|11061|8|5|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
 |11065|8|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
 |11074|8|5|False|True|Contractible|Contractible|
 |11076|8|5|False|True|Contractible|Contractible|
