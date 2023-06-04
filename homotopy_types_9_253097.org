@@ -1,0 +1,226 @@
+| index | order | max d | Helly | K Helly | HT G | HT KG |
+|-------+-------+-------+-------+---------+------+-------|
+|253101|9|7|False|False|\(\vee_{3}S^{2}\)|\(\vee_{5}S^{3}\)|
+|253106|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253109|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253110|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253125|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|253131|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253138|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253146|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|253180|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{2}\)|
+|253247|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|253249|9|6|False|False|Contractible|Contractible|
+|253263|9|7|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|253266|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|253268|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253271|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|253273|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253274|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|253278|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253279|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|253281|9|5|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|253284|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|253285|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253287|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253288|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|253293|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|253297|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253299|9|5|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|253300|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|253304|9|6|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253306|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|253343|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|253380|9|6|False|True|Contractible|Contractible|
+|253424|9|6|False|False|Contractible|Contractible|
+|253432|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|253439|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253445|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253448|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253452|9|5|False|False|\(\vee_{4}S^{1}\)|\(\vee_{4}S^{1}\)|
+|253461|9|5|False|False|\(\vee_{4}S^{1}\)|\(\vee_{4}S^{1}\)|
+|253463|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253466|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|253538|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253541|9|6|False|False|Contractible|Contractible|
+|253557|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|253560|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253561|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253562|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|253564|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253565|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253566|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253567|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|253574|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253580|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253587|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253601|9|6|False|True|Contractible|Contractible|
+|253617|9|6|False|True|Contractible|Contractible|
+|253620|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253621|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253623|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|253636|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253637|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|253638|9|6|False|True|Contractible|Contractible|
+|253642|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|253645|9|6|False|False|Contractible|Contractible|
+|253650|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|253669|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|253690|9|6|False|True|Contractible|Contractible|
+|253773|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|253777|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|253804|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|253844|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|253973|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|253975|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|253983|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|253986|9|5|False|False|\(\vee_{4}S^{1}\)|\(\vee_{4}S^{1}\)|
+|253989|9|6|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|254003|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|254009|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|254013|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|254015|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|254022|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|254026|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|254030|9|5|False|False|\(\vee_{4}S^{1}\)|\(\vee_{4}S^{1}\)|
+|254031|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|254033|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|254038|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|254041|9|5|False|False|\(\vee_{4}S^{1}\)|\(\vee_{4}S^{1}\)|
+|254044|9|6|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|254058|9|6|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|254061|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|254064|9|6|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|254067|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|254071|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|254072|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|254075|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|254077|9|6|False|True|Contractible|Contractible|
+|254080|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|254085|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|254165|9|6|False|False|Contractible|Contractible|
+|254176|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|254178|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|254182|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|254187|9|6|False|True|Contractible|Contractible|
+|254190|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254196|9|6|False|True|Contractible|Contractible|
+|254199|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|254202|9|6|False|True|Contractible|Contractible|
+|254223|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254227|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|254261|9|6|False|False|\(S^{1}\vee \vee_{2}S^{2}\)|\(S^{1}\vee \vee_{2}S^{3}\)|
+|254263|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|254290|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|254291|9|6|False|True|Contractible|Contractible|
+|254297|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|254300|9|6|False|False|Contractible|Contractible|
+|254336|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254348|9|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|254349|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|254352|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|254369|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|254403|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254408|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254410|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254469|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|254519|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|254521|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|254547|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254613|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|254616|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254619|9|6|False|True|Contractible|Contractible|
+|254647|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254684|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|254710|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|254711|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|254713|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|254714|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|254715|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|254747|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|254748|9|6|False|False|Contractible|Contractible|
+|254751|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254752|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254756|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|254757|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|254761|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254788|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|254868|9|6|False|False|\(S^{1}\vee \vee_{2}S^{2}\)|\(S^{1}\vee \vee_{4}S^{3}\)|
+|254870|9|6|False|False|\(\vee_{3}S^{2}\)|\(\vee_{5}S^{3}\)|
+|254904|9|6|False|False|\(\vee_{4}S^{2}\)|\(\vee_{8}S^{3}\)|
+|254945|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|254948|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|254998|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255018|9|7|False|False|\(\vee_{2}S^{2}\)|\(\vee_{4}S^{3}\)|
+|255028|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|255031|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|255037|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|255039|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|255040|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|255042|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|255045|9|6|False|False|\(\vee_{2}S^{2}\)|\(S^{2}\vee S^{3}\)|
+|255052|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|255053|9|6|False|True|Contractible|Contractible|
+|255056|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255066|9|6|False|False|\(\vee_{2}S^{2}\)|\(S^{2}\vee S^{3}\)|
+|255067|9|6|False|False|\(\vee_{2}S^{2}\)|\(S^{2}\vee S^{3}\)|
+|255068|9|6|False|False|\(\vee_{3}S^{2}\)|\(S^{2}\vee \vee_{2}S^{3}\)|
+|255080|9|6|False|True|Contractible|Contractible|
+|255082|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255086|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255090|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|255094|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|255106|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|255115|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|255116|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|255118|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|255119|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|255120|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|255121|9|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|255122|9|6|False|False|Contractible|Contractible|
+|255123|9|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|255137|9|6|False|True|Contractible|Contractible|
+|255140|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|255141|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|255147|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{2}\)|
+|255173|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{4}S^{3}\)|
+|255177|9|6|False|False|\(S^{1}\vee \vee_{2}S^{2}\)|\(S^{1}\vee \vee_{4}S^{3}\)|
+|255186|9|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|255201|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|255205|9|6|False|True|Contractible|Contractible|
+|255219|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|255228|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255256|9|7|False|False|\(\vee_{3}S^{2}\)|\(\vee_{7}S^{3}\)|
+|255292|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255305|9|6|False|False|\(\vee_{2}S^{2}\)|\(S^{2}\vee S^{3}\)|
+|255310|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{4}S^{3}\)|
+|255313|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|255375|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255400|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|255419|9|6|False|True|Contractible|Contractible|
+|255422|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255437|9|7|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|255450|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|255451|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|255454|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|255455|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|255457|9|6|False|True|Contractible|Contractible|
+|255459|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|255460|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|255463|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|255514|9|7|False|False|\(S^{1}\vee S^{3}\)|\(S^{1}\vee S^{7}\)|
+|255575|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255608|9|6|False|True|Contractible|Contractible|
+|255618|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{2}\)|
+|255640|9|7|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|255648|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255669|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255675|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255678|9|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|255680|9|6|False|False|\(S^{1}\vee \vee_{2}S^{2}\)|\(S^{1}\vee \vee_{4}S^{3}\)|
+|255705|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{2}\)|
+|255709|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|255712|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|255716|9|6|False|False|\(S^{1}\vee \vee_{2}S^{2}\)|\(S^{1}\vee \vee_{2}S^{3}\)|
+|255721|9|6|False|False|\(\vee_{4}S^{2}\)|\(\vee_{10}S^{3}\)|
+|255738|9|7|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|

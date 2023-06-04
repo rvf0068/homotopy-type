@@ -1,0 +1,38 @@
+| index | order | max d | Helly | K Helly | HT G | HT KG |
+|-------+-------+-------+-------+---------+------+-------|
+|256188|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|256196|9|6|False|False|\(\vee_{3}S^{2}\)|\(\vee_{7}S^{3}\)|
+|256207|9|6|False|False|\(\vee_{4}S^{2}\)|\(\vee_{10}S^{3}\)|
+|256215|9|6|False|False|\(\vee_{3}S^{2}\)|\(\vee_{7}S^{3}\)|
+|256222|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|256223|9|6|False|True|Contractible|Contractible|
+|256225|9|6|False|False|\(S^{2}\)|\(S^{2}\)|
+|256228|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|256265|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|256346|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|256349|9|6|False|False|\(\vee_{3}S^{2}\)|\(\vee_{5}S^{3}\)|
+|256353|9|6|False|False|\(\vee_{3}S^{2}\)|\(\vee_{5}S^{3}\)|
+|256373|9|6|False|False|\(\vee_{5}S^{2}\)|\(\vee_{17}S^{3}\)|
+|256391|9|7|False|False|\(\vee_{3}S^{2}\)|\(\vee_{9}S^{3}\)|
+|256445|9|6|False|False|\(S^{1}\vee S^{2}\)|\(S^{1}\vee S^{3}\)|
+|256446|9|6|False|False|\(S^{1}\)|\(S^{1}\)|
+|256449|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|256453|9|6|False|False|\(\vee_{4}S^{2}\)|\(\vee_{10}S^{3}\)|
+|256463|9|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|256464|9|6|False|False|\(S^{1}\vee \vee_{2}S^{2}\)|\(S^{1}\vee \vee_{4}S^{3}\)|
+|256476|9|6|False|False|\(\vee_{3}S^{2}\)|\(\vee_{7}S^{3}\)|
+|Clique graph has at least 23 vertices||||||
+|Clique graph has at least 23 vertices||||||
+|256515|9|6|False|False|\(\vee_{2}S^{2}\)|\(S^{2}\vee S^{3}\)|
+|256518|9|6|False|False|\(\vee_{4}S^{2}\)|\(\vee_{8}S^{3}\)|
+|256522|9|6|False|False|\(\vee_{4}S^{2}\)|\(\vee_{8}S^{3}\)|
+|Clique graph has at least 23 vertices||||||
+|256929|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|257374|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|257375|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
+|257614|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|257840|9|5|False|False|\(S^{1}\)|\(S^{1}\)|
+|257841|9|5|False|False|Contractible|Contractible|
+|257842|9|6|False|False|Contractible|Contractible|
+|258229|9|6|False|False|\(\vee_{2}S^{2}\)|\(\vee_{2}S^{3}\)|
+|258898|9|6|False|False|\(S^{2}\)|\(S^{3}\)|
