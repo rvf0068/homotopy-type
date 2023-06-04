@@ -65,23 +65,20 @@ def homotopy_type(graph):
     dong1 = c_complex.dong_matching()
     if _read_dong(dong1)[0]:
         return _read_dong(dong1)[1]
-    else:
-        s_ht = simplify_ht(graph)
-        c_complex = clique_complex(s_ht)
-        dong2 = c_complex.dong_matching()
-        if _read_dong(dong2)[0]:
-            return _read_dong(dong2)[1]
-        else:
-            attempts = 0
-            while attempts < 5:
-                attempts = attempts + 1
-                dong3 = c_complex.dong_matching(order_function=_shuff)
-                if _read_dong(dong3)[0]:
-                    return _read_dong(dong3)[1]
-            if is_vertex_decomposable(c_complex):
-                return _read_betti_numbers(betti_numbers(s_ht))
-            else:
-                return betti_numbers(s_ht)
+    s_ht = simplify_ht(graph)
+    c_complex = clique_complex(s_ht)
+    dong2 = c_complex.dong_matching()
+    if _read_dong(dong2)[0]:
+        return _read_dong(dong2)[1]
+    attempts = 0
+    while attempts < 5:
+        attempts = attempts + 1
+        dong3 = c_complex.dong_matching(order_function=_shuff)
+        if _read_dong(dong3)[0]:
+            return _read_dong(dong3)[1]
+    if is_vertex_decomposable(c_complex):
+        return _read_betti_numbers(betti_numbers(s_ht))
+    return betti_numbers(s_ht)
 
 
 def dimension_sc(s_complex):
@@ -145,28 +142,26 @@ def main():
         all_graphs = nx.graph_atlas_g()
         results = "homotopy_types_up_to_7.org"
 
-        def conditions(graph, i):
+        def conditions(graph):
             return (graph.order() > 1
                     and nx.is_connected(graph)
                     and not has_dominated_vertex(graph)
-                    and max_degree(graph) >= 5
-                    )
+                    and max_degree(graph) >= 5)
     else:
         all_graphs = list_graphs(args.order)
         results = f"homotopy_types_{args.order}.org"
 
-        def conditions(graph, i):
+        def conditions(graph):
             return (not has_dominated_vertex(graph)
-                    and max_degree(graph) >= 5
-                    and i > args.start)
-    i = -1
+                    and max_degree(graph) >= 5)
+    i = args.start
     with open(results, 'a', encoding="utf8") as the_file:
         the_file.write(HEADING)
-        for graph in all_graphs:
+        for graph in all_graphs[(args.start+1):]:
             i = i+1
             print("\r", end='')
             print(f"Currently on graph {i}", end='', flush=True)
-            if conditions(graph, i):
+            if conditions(graph):
                 p_g = p(graph)
                 h_g = homotopy_type(p_g)
                 k_g = k(p_g, 23)
