@@ -149,7 +149,7 @@ def main():
                     and max_degree(graph) >= 5)
     else:
         all_graphs = list_graphs(args.order)
-        results = f"homotopy_types_{args.order}.org"
+        results = f"homotopy_types_{args.order}_{args.start}.org"
 
         def conditions(graph):
             return (not has_dominated_vertex(graph)
