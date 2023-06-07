@@ -5,13 +5,14 @@ import argparse
 import random
 import mogutda
 import networkx as nx
-from pycliques.simplicial import clique_complex
+from pycliques.simplicial import (
+    SimplicialComplex,
+    clique_complex)
 from pycliques.dominated import completely_pared_graph as p
 from pycliques.dominated import (
     has_dominated_vertex,
     complete_s_collapse,
-    complete_s_collapse_edges
-    )
+    complete_s_collapse_edges)
 from pycliques.cliques import clique_graph as k
 from pycliques.helly import is_clique_helly
 from pycliques.lists import list_graphs
@@ -130,6 +131,50 @@ def is_vertex_decomposable(the_complex):
                     is_vertex_decomposable(the_complex.deletion(vertex))):
                 return True
         return False
+
+
+def _facets_containing_simplex(simplicial_complex, simplex):
+    facets = simplicial_complex.facet_set
+    return len([facet for facet in facets if simplex.issubset(facet)])
+
+
+def is_free_face(simplicial_complex, simplex):
+    return (not(simplex in simplicial_complex.facet_set) and
+            _facets_containing_simplex(simplicial_complex, simplex) == 1)
+
+
+def remove_simplex(simplicial_complex, simplex):
+    _vertices_to_remove = {x for x in simplex
+                           if is_free_face(simplicial_complex, {x})}
+    new_vertices = simplicial_complex.vertex_set - _vertices_to_remove
+
+    def _new_function(s):
+        return simplicial_complex.function(s) and not simplex.issubset(s)
+    return SimplicialComplex(new_vertices, function=_new_function)
+
+
+def has_free_face(simplicial_complex):
+    for face in simplicial_complex.all_simplices():
+        if is_free_face(simplicial_complex, face):
+            return face
+    return None
+
+
+def collapse(simplicial_complex):
+    s_c = simplicial_complex
+    all_done = False
+    while not all_done:
+        if len(s_c.vertex_set) in {0, 1}:
+            return s_c
+        free_face = has_free_face(s_c)
+        if free_face is None:
+            all_done = True
+        elif len(free_face) == 0:
+            return SimplicialComplex({}, {})
+        else:
+            print(f"Free face: {free_face}")
+            s_c = remove_simplex(s_c, free_face)
+    return s_c
 
 
 HEADING = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
