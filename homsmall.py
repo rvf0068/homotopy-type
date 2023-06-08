@@ -115,7 +115,7 @@ def is_shedding_vertex(the_complex, vertex):
     link = the_complex.link(vertex)
     deletion = the_complex.deletion(vertex)
     facets_deletion = deletion.facet_set
-    faces_link = link.all_simplices()
+    faces_link = link.facet_set
     intersection = facets_deletion & faces_link
     return len(intersection) == 0
 
@@ -144,9 +144,8 @@ def is_free_face(simplicial_complex, simplex):
 
 
 def remove_simplex(simplicial_complex, simplex):
-    _vertices_to_remove = {x for x in simplex
-                           if is_free_face(simplicial_complex, {x})}
-    facet_containing = [f for f in simplicial_complex.facet_set if simplex.issubset(f)][0]
+    facet_containing = [f for f in simplicial_complex.facet_set
+                        if simplex.issubset(f)][0]
     other_facets = simplicial_complex.facet_set - {facet_containing}
     good_facets = other_facets
     for x in simplex:
@@ -157,7 +156,8 @@ def remove_simplex(simplicial_complex, simplex):
                 break
         if good:
             good_facets = good_facets.union({facet_containing-{x}})
-    return SimplicialComplex(simplicial_complex.vertex_set, facet_set=good_facets)
+    return SimplicialComplex(simplicial_complex.vertex_set,
+                             facet_set=good_facets)
 
 
 def has_free_face(simplicial_complex):
