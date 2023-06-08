@@ -146,11 +146,18 @@ def is_free_face(simplicial_complex, simplex):
 def remove_simplex(simplicial_complex, simplex):
     _vertices_to_remove = {x for x in simplex
                            if is_free_face(simplicial_complex, {x})}
-    new_vertices = simplicial_complex.vertex_set - _vertices_to_remove
-
-    def _new_function(s):
-        return simplicial_complex.function(s) and not simplex.issubset(s)
-    return SimplicialComplex(new_vertices, function=_new_function)
+    facet_containing = [f for f in simplicial_complex.facet_set if simplex.issubset(f)][0]
+    other_facets = simplicial_complex.facet_set - {facet_containing}
+    good_facets = other_facets
+    for x in simplex:
+        good = True
+        for g in other_facets:
+            if (facet_containing-{x}).issubset(g):
+                good = False
+                break
+        if good:
+            good_facets = good_facets.union({facet_containing-{x}})
+    return SimplicialComplex(simplicial_complex.vertex_set, facet_set=good_facets)
 
 
 def has_free_face(simplicial_complex):
