@@ -167,7 +167,7 @@ def has_free_face(simplicial_complex):
     return None
 
 
-def collapse(simplicial_complex):
+def collapse(simplicial_complex, verbose=False):
     s_c = simplicial_complex
     all_done = False
     while not all_done:
@@ -179,7 +179,8 @@ def collapse(simplicial_complex):
         elif len(free_face) == 0:
             return SimplicialComplex({}, {})
         else:
-            print(f"Free face: {free_face}")
+            if verbose:
+                print(f"Free face: {free_face}")
             s_c = remove_simplex(s_c, free_face)
     return s_c
 
