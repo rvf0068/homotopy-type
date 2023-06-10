@@ -156,8 +156,8 @@ def remove_simplex(simplicial_complex, simplex):
                 break
         if good:
             good_facets = good_facets.union({facet_containing-{x}})
-    return SimplicialComplex(simplicial_complex.vertex_set,
-                             facet_set=good_facets)
+    vertices = set.union(*(set(s) for s in good_facets))
+    return SimplicialComplex(vertices, facet_set=good_facets)
 
 
 def has_free_face(simplicial_complex):
