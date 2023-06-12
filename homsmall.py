@@ -67,17 +67,18 @@ def homotopy_type(graph):
     if _read_dong(dong1)[0]:
         return _read_dong(dong1)[1]
     s_ht = simplify_ht(graph)
-    c_complex = clique_complex(s_ht)
-    dong2 = c_complex.dong_matching()
+    c_complex2 = clique_complex(s_ht)
+    dong2 = c_complex2.dong_matching()
     if _read_dong(dong2)[0]:
         return _read_dong(dong2)[1]
     attempts = 0
     while attempts < 5:
         attempts = attempts + 1
-        dong3 = c_complex.dong_matching(order_function=_shuff)
+        dong3 = c_complex2.dong_matching(order_function=_shuff)
         if _read_dong(dong3)[0]:
             return _read_dong(dong3)[1]
-    if is_vertex_decomposable(c_complex):
+    cc = collapse(c_complex)
+    if is_vertex_decomposable(cc):
         return _read_betti_numbers(betti_numbers(s_ht))
     return betti_numbers(s_ht)
 
@@ -236,7 +237,7 @@ def main():
                                        "|" + str(hkg) +
                                        "|\n")
                 else:
-                    c_big = "|Clique graph has at least 23 vertices||||||\n"
+                    c_big = f"|{i}|Clique graph has at least 23 vertices|||||\n"
                     the_file.write(c_big)
     print("\n")
 
