@@ -16,6 +16,7 @@ from pycliques.dominated import (
 from pycliques.cliques import clique_graph as k
 from pycliques.helly import is_clique_helly
 from pycliques.lists import list_graphs
+from pycliques.surfaces import open_neighborhood
 
 
 def simplify_ht(graph):
@@ -77,6 +78,9 @@ def homotopy_type(graph):
         dong3 = c_complex2.dong_matching(order_function=_shuff)
         if _read_dong(dong3)[0]:
             return _read_dong(dong3)[1]
+    c_v = _find_special_cutpoint(graph)
+    if c_v is not None:
+        return _h_type_clique_graph_cutpoint(graph, c_v)
     c_c = collapse(c_complex)
     if is_vertex_decomposable(c_c):
         return _read_betti_numbers(betti_numbers(s_ht))
@@ -188,6 +192,33 @@ def collapse(simplicial_complex, verbose=False):
                 print(f"Free face: {free_face}")
             s_c = remove_simplex(s_c, free_face)
     return s_c
+
+
+def _is_special_cutpoint(graph, vertex):
+    neigh = open_neighborhood(graph, vertex)
+    if neigh.size() == 0:
+        for n_vertex in neigh:
+            if graph.degree[n_vertex] == 1:
+                return False
+        return True
+    return False
+
+
+def _find_special_cutpoint(graph):
+    for vertex in graph:
+        if _is_special_cutpoint(graph, vertex):
+            return vertex
+    return None
+
+
+def _h_type_clique_graph_cutpoint(graph, vertex):
+    h_graph = graph.subgraph(set(graph.nodes())-{vertex})
+    k_h_type = homotopy_type(k(h_graph))[2:]
+    s_neigh = open_neighborhood(graph, vertex).order()
+    if s_neigh == 2:
+        return "\\(S^1\\vee "+k_h_type
+    else:
+        return f"\\(\\vee_{s_neigh-1}S^1\\vee "+k_h_type
 
 
 HEADING = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
