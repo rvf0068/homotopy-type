@@ -77,8 +77,8 @@ def homotopy_type(graph):
         dong3 = c_complex2.dong_matching(order_function=_shuff)
         if _read_dong(dong3)[0]:
             return _read_dong(dong3)[1]
-    cc = collapse(c_complex)
-    if is_vertex_decomposable(cc):
+    c_c = collapse(c_complex)
+    if is_vertex_decomposable(c_c):
         return _read_betti_numbers(betti_numbers(s_ht))
     return betti_numbers(s_ht)
 
@@ -140,28 +140,31 @@ def _facets_containing_simplex(simplicial_complex, simplex):
 
 
 def is_free_face(simplicial_complex, simplex):
+    """Returns True if simplex is a free face of simplicial_complex"""
     return (not(simplex in simplicial_complex.facet_set) and
             _facets_containing_simplex(simplicial_complex, simplex) == 1)
 
 
 def remove_simplex(simplicial_complex, simplex):
+    """Returns the simplicial complex obtained by removing a simplex"""
     facet_containing = [f for f in simplicial_complex.facet_set
                         if simplex.issubset(f)][0]
     other_facets = simplicial_complex.facet_set - {facet_containing}
     good_facets = other_facets
-    for x in simplex:
+    for vertex in simplex:
         good = True
-        for g in other_facets:
-            if (facet_containing-{x}).issubset(g):
+        for g_facet in other_facets:
+            if (facet_containing-{vertex}).issubset(g_facet):
                 good = False
                 break
         if good:
-            good_facets = good_facets.union({facet_containing-{x}})
+            good_facets = good_facets.union({facet_containing-{vertex}})
     vertices = set.union(*(set(s) for s in good_facets))
     return SimplicialComplex(vertices, facet_set=good_facets)
 
 
 def has_free_face(simplicial_complex):
+    """Returns a free face of simplicial_complex if it exists, None otherwise"""
     for face in simplicial_complex.all_simplices():
         if is_free_face(simplicial_complex, face):
             return face
@@ -169,6 +172,7 @@ def has_free_face(simplicial_complex):
 
 
 def collapse(simplicial_complex, verbose=False):
+    """Collapses simplicial_complex"""
     s_c = simplicial_complex
     all_done = False
     while not all_done:
