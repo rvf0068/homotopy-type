@@ -78,9 +78,6 @@ def homotopy_type(graph):
         dong3 = c_complex2.dong_matching(order_function=_shuff)
         if _read_dong(dong3)[0]:
             return _read_dong(dong3)[1]
-    c_v = _find_special_cutpoint(graph)
-    if c_v is not None:
-        return _h_type_clique_graph_cutpoint(graph, c_v)
     c_c = collapse(c_complex)
     if is_vertex_decomposable(c_c):
         return _read_betti_numbers(betti_numbers(s_ht))
@@ -257,6 +254,11 @@ def main():
                 if k_g is not None:
                     pkg = nx.convert_node_labels_to_integers(p(k_g))
                     hkg = homotopy_type(pkg)
+                    c_v = _find_special_cutpoint(graph)
+                    if c_v is not None:
+                        hkg = _h_type_clique_graph_cutpoint(p_g, c_v)
+                    else:
+                        hkg = homotopy_type(pkg)
                     is_helly = is_clique_helly(graph)
                     is_k_helly = is_clique_helly(pkg)
                     if (not (is_helly and
