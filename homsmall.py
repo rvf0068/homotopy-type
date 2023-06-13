@@ -210,12 +210,18 @@ def _find_special_cutpoint(graph):
 
 def _h_type_clique_graph_cutpoint(graph, vertex):
     h_graph = graph.subgraph(set(graph.nodes())-{vertex})
-    k_h_type = homotopy_type(k(h_graph))[2:]
+    k_h_type = homotopy_type(k(h_graph))
     s_neigh = open_neighborhood(graph, vertex).order()
-    if s_neigh == 2:
-        return "\\(S^1\\vee "+k_h_type
+    if k_h_type == "Contractible":
+        if s_neigh == 2:
+            return "\\(S^{1}\\)"
+        else:
+            return f"\\(\\vee_{ {s_neigh-1} }S^{ {1} }\\)"
     else:
-        return f"\\(\\vee_{s_neigh-1}S^1\\vee "+k_h_type
+        k_h_type = k_h_type[2:]
+        if s_neigh == 2:
+            return "\\(S^{1}\\vee " + k_h_type
+        return f"\\(\\vee_{ {s_neigh-1} }S^{ {1} }\\vee " + k_h_type
 
 
 HEADING = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
