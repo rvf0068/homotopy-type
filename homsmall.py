@@ -3,6 +3,7 @@ Calculates the homotopy type of graphs and their clique graphs
 """
 import argparse
 import random
+import re
 import mogutda
 import networkx as nx
 from pycliques.simplicial import (
@@ -222,6 +223,15 @@ def _h_type_clique_graph_cutpoint(graph, vertex):
             return f"\\(\\vee_{ {s_neigh-1} }S^{ {1} }\\)"
     else:
         k_h_type = k_h_type[2:]
+        if "S^{1}" in k_h_type:
+            pat = r"\_\{(\d+)\}S\^\{1\}"
+            m = re.search(pat, k_h_type)
+            if m is None:
+                # K(G-v) contains only one copy of S^1
+                return f"\\(\\vee_{ {s_neigh} }" + k_h_type
+            inds = m.span(1)
+            newcadena = k_h_type[:inds[0]]+str(int(k_h_type[inds[0]: inds[1]])+1)+k_h_type[inds[1]:]
+            return "\\("+newcadena
         if s_neigh == 2:
             return "\\(S^{1}\\vee " + k_h_type
         return f"\\(\\vee_{ {s_neigh-1} }S^{ {1} }\\vee " + k_h_type
