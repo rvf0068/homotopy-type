@@ -192,6 +192,7 @@ def collapse(simplicial_complex, verbose=False):
 
 
 def _is_special_cutpoint(graph, vertex):
+    """Returns True if vertex is a special cutpoint of graph"""
     neigh = open_neighborhood(graph, vertex)
     if neigh.size() == 0:
         for n_vertex in neigh:
@@ -202,6 +203,7 @@ def _is_special_cutpoint(graph, vertex):
 
 
 def _find_special_cutpoint(graph):
+    """Returns a special cutpoint of graph if it exists, None otherwise"""
     for vertex in graph:
         if _is_special_cutpoint(graph, vertex):
             return vertex
@@ -209,6 +211,7 @@ def _find_special_cutpoint(graph):
 
 
 def _h_type_clique_graph_cutpoint(graph, vertex):
+    """Returns the homotopy type of the clique graph of graph with a special cutpoint"""
     h_graph = graph.subgraph(set(graph.nodes())-{vertex})
     k_h_type = homotopy_type(k(h_graph))
     s_neigh = open_neighborhood(graph, vertex).order()
