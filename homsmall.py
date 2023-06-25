@@ -69,7 +69,7 @@ def homotopy_type(graph):
     dong1 = c_complex.dong_matching()
     if _read_dong(dong1)[0]:
         return _read_dong(dong1)[1]
-    s_ht = simplify_ht(graph)
+    s_ht = nx.convert_node_labels_to_integers(simplify_ht(graph))
     c_complex2 = clique_complex(s_ht)
     dong2 = c_complex2.dong_matching()
     if _read_dong(dong2)[0]:
@@ -298,7 +298,7 @@ def main():
                     c_big = f"|{i}|Clique graph has at least 23 vertices|||||\n"
                     the_file.write(c_big)
                 end_time = timeit.default_timer()
-                print(f"Graph {i} took {start_time-end_time}")
+                print(f" Graph {i} took {end_time-start_time}")
     print("\n")
 
 
