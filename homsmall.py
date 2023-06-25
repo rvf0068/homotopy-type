@@ -272,7 +272,7 @@ def main():
                 k_g = k(p_g, 23)
                 if k_g is not None:
                     pkg = nx.convert_node_labels_to_integers(p(k_g))
-                    hkg = homotopy_type(pkg)
+                    # hkg = homotopy_type(pkg)
                     c_v = _find_special_cutpoint(graph)
                     if c_v is not None:
                         hkg = _h_type_clique_graph_cutpoint(p_g, c_v)
