@@ -4,6 +4,7 @@ Calculates the homotopy type of graphs and their clique graphs
 import argparse
 import random
 import re
+import timeit
 import mogutda
 import networkx as nx
 from pycliques.simplicial import (
@@ -267,6 +268,7 @@ def main():
             print("\r", end='')
             print(f"Currently on graph {i}", end='', flush=True)
             if conditions(graph):
+                start_time = timeit.default_timer()
                 p_g = p(graph)
                 h_g = homotopy_type(p_g)
                 k_g = k(p_g, 23)
@@ -295,6 +297,8 @@ def main():
                 else:
                     c_big = f"|{i}|Clique graph has at least 23 vertices|||||\n"
                     the_file.write(c_big)
+                end_time = timeit.default_timer()
+                print(f"Graph {i} took {start_time-end_time}")
     print("\n")
 
 
