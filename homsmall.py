@@ -238,6 +238,29 @@ def _h_type_clique_graph_cutpoint(graph, vertex):
         return f"\\(\\vee_{ {s_neigh-1} }S^{ {1} }\\vee " + k_h_type
 
 
+def star(s_complex, vertex):
+    new_facets = {f for f in s_complex.facet_set if vertex in f}
+    vertices = set.union(*(set(s) for s in new_facets))
+    return SimplicialComplex(vertices, facet_set=new_facets)
+
+
+def star_cluster(s_complex, simplex):
+    new_facets = set()
+    for vertex in simplex:
+        new_facets = new_facets.union({f for f in s_complex.facet_set
+                                       if vertex in f})
+    vertices = set.union(*(set(s) for s in new_facets))
+    return SimplicialComplex(vertices, facet_set=new_facets)
+
+
+def intersection_complex(s_complex1, s_complex2):
+    vertices = {x for x in s_complex1.vertex_set if s_complex2.function({x})}
+
+    def _new_function(s):
+        return s_complex1.function(s) and s_complex2.function(s)
+    return SimplicialComplex(vertices, function=_new_function)
+
+
 HEADING = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
            "|-------+-------+-------+-------+---------+------+-------|\n")
 
