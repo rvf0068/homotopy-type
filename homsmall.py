@@ -261,6 +261,59 @@ def intersection_complex(s_complex1, s_complex2):
     return SimplicialComplex(vertices, function=_new_function)
 
 
+def h_type_as_suspension(graph):
+    def increase_numbers(line, n):
+        pattern = r"S\^{(\d+)}"
+
+        def repl(match):
+            number = int(match.group(1))
+            increased_number = number + n
+            return f"S^{ {increased_number} }"
+        updated_line = re.sub(pattern, repl, line)
+        return updated_line
+    c_graph = nx.complement(graph)
+    comps = [c_graph.subgraph(c).copy() for c in nx.connected_components(c_graph)]
+    compsK2 = [s for s in comps if s.order() == 2]
+    if len(compsK2) == 0:
+        return None
+    others = [s for s in comps if s.order() != 2]
+    subg = nx.subgraph(graph, set.union(*(set(s) for s in others)))
+    return increase_numbers(homotopy_type(subg), len(compsK2))
+
+
+def betti_numbers_c(simplicial_complex):
+    """Computes the betti numbers of the complex of completes of a graph"""
+    def simplify_list(bettis):
+        simplified = bettis
+        while len(simplified) > 0 and simplified[-1] == 0:
+            del simplified[-1]
+        return simplified
+    the_simplices = [tuple(c) for c in simplicial_complex.facet_set]
+    the_complex = mogutda.SimplicialComplex(simplices=the_simplices)
+    dim = dimension_sc(the_complex)
+    numbers = [the_complex.betti_number(i) for i in range(dim+1)]
+    numbers[0] = numbers[0] - 1  # reduced betti number
+    return simplify_list(numbers)
+
+
+def h_type_using_star_cluster(graph):
+    c_graph = nx.complement(graph)
+    verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
+    if len(verts) == 0:
+        return False
+    else:
+        vertex = verts[0]
+        IG = clique_complex(graph)
+        ST = star(IG, vertex)
+        SC = star_cluster(IG, c_graph[vertex])
+        int_c = intersection_complex(ST, SC)
+        csc = collapse(int_c)
+        if is_vertex_decomposable(csc):
+            return _read_betti_numbers([0]+betti_numbers_c(csc))
+        else:
+            return False
+
+
 HEADING = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
            "|-------+-------+-------+-------+---------+------+-------|\n")
 
