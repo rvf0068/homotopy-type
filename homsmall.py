@@ -204,7 +204,7 @@ def _is_special_cutpoint(graph, vertex):
     return False
 
 
-def _find_special_cutpoint(graph):
+def find_special_cutpoint(graph):
     """Returns a special cutpoint of graph if it exists, None otherwise"""
     for vertex in graph:
         if _is_special_cutpoint(graph, vertex):
@@ -212,7 +212,7 @@ def _find_special_cutpoint(graph):
     return None
 
 
-def _h_type_clique_graph_cutpoint(graph, vertex):
+def h_type_clique_graph_cutpoint(graph, vertex):
     """Returns the homotopy type of the clique graph of graph with a special cutpoint"""
     h_graph = graph.subgraph(set(graph.nodes())-{vertex})
     k_h_type = homotopy_type(k(h_graph))
@@ -352,9 +352,9 @@ def main():
                 if k_g is not None:
                     pkg = nx.convert_node_labels_to_integers(p(k_g))
                     # hkg = homotopy_type(pkg)
-                    c_v = _find_special_cutpoint(graph)
+                    c_v = find_special_cutpoint(graph)
                     if c_v is not None:
-                        hkg = _h_type_clique_graph_cutpoint(p_g, c_v)
+                        hkg = h_type_clique_graph_cutpoint(p_g, c_v)
                     else:
                         hkg = homotopy_type(pkg)
                     is_helly = is_clique_helly(graph)
