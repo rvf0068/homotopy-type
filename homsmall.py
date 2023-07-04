@@ -297,6 +297,7 @@ def betti_numbers_c(simplicial_complex):
 
 
 def h_type_using_star_cluster(graph):
+    graph = nx.convert_node_labels_to_integers(graph)
     c_graph = nx.complement(graph)
     verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
     if len(verts) == 0:
