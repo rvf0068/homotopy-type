@@ -333,7 +333,7 @@ def h_type_as_join_complement(graph):
     x = symbols('x')
     c_graph = nx.complement(graph)
     comps = [c_graph.subgraph(c).copy() for c in nx.connected_components(c_graph)]
-    if len(comps) > 0:
+    if len(comps) > 1:
         compls = [clique_complex(nx.complement(s)) for s in comps]
         if all([is_vertex_decomposable(collapse(c)) for c in compls]):
             pols = [list_to_polynomial(betti_numbers_c(s)) for s in compls]
