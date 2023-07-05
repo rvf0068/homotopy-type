@@ -344,6 +344,31 @@ def h_type_as_join_complement(graph):
     return False
 
 
+def h_type_by_special_neigh(graph):
+    neighs = [(i, open_neighborhood(graph, i)) for i in graph.nodes()]
+    twok2 = nx.disjoint_union(nx.complete_graph(2), nx.complete_graph(2))
+    filt = [v for (v, nei) in neighs if nx.is_isomorphic(nei, twok2)]
+    if len(filt) > 0:
+        v = filt[0]
+        h = graph.subgraph(set(graph.nodes())-{v})
+        h_type = homotopy_type(h)
+        if h_type == "Contractible":
+            return "\\(S^{1}\\)"
+        else:
+            h_type = h_type[2:]
+            if "S^{1}" in h_type:
+                pat = r"\_\{(\d+)\}S\^\{1\}"
+                m = re.search(pat, h_type)
+                if m is None:
+                    # G-v contains only one copy of S^1
+                    return "\\(\\vee_{2} " + h_type
+                inds = m.span(1)
+                newcadena = h_type[:inds[0]]+str(int(h_type[inds[0]: inds[1]]))+h_type[inds[1]:]
+                return "\\("+newcadena
+            return "\\(S^{1}\\vee " + h_type
+    return False
+
+
 HEADING = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
            "|-------+-------+-------+-------+---------+------+-------|\n")
 
