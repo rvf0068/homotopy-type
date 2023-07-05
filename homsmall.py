@@ -7,6 +7,7 @@ import re
 import timeit
 import mogutda
 import networkx as nx
+from sympy import symbols, Poly, Mul
 from pycliques.simplicial import (
     SimplicialComplex,
     clique_complex)
@@ -46,7 +47,7 @@ def _read_dong(dong):
             return (True, f"\\(\\vee_{ {n_critical} }S^{ {dimension-1} }\\)")
 
 
-def _read_betti_numbers(bettis):
+def read_betti_numbers(bettis):
     betti = "\\("
     for index, betti_number in enumerate(bettis):
         if betti_number != 0:
@@ -82,7 +83,7 @@ def homotopy_type(graph):
             return _read_dong(dong3)[1]
     c_c = collapse(c_complex)
     if is_vertex_decomposable(c_c):
-        return _read_betti_numbers(betti_numbers(s_ht))
+        return read_betti_numbers(betti_numbers(s_ht))
     return betti_numbers(s_ht)
 
 
@@ -310,9 +311,37 @@ def h_type_using_star_cluster(graph):
         int_c = intersection_complex(ST, SC)
         csc = collapse(int_c)
         if is_vertex_decomposable(csc):
-            return _read_betti_numbers([0]+betti_numbers_c(csc))
+            return read_betti_numbers([0]+betti_numbers_c(csc))
         else:
             return False
+
+
+def list_to_polynomial(lst):
+    x = symbols('x')
+    terms = [i * x**p for p, i in enumerate(lst)]
+    polynomial = Poly(sum(terms), x)
+    return polynomial
+
+
+def polynomial_to_list(polynomial):
+    coefficients = polynomial.all_coeffs()
+    coefficients.reverse()
+    return coefficients
+
+
+def h_type_as_join_complement(graph):
+    x = symbols('x')
+    c_graph = nx.complement(graph)
+    comps = [c_graph.subgraph(c).copy() for c in nx.connected_components(c_graph)]
+    if len(comps) > 0:
+        compls = [clique_complex(nx.complement(s)) for s in comps]
+        if all([is_vertex_decomposable(collapse(c)) for c in compls]):
+            pols = [list_to_polynomial(betti_numbers_c(s)) for s in compls]
+            expr_pols = [poly.as_expr() for poly in pols]
+            the_list = [0]*(len(comps)-1)+polynomial_to_list(Poly(Mul(*expr_pols), x))
+            return read_betti_numbers(the_list)
+        return False
+    return False
 
 
 HEADING = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
