@@ -67,6 +67,9 @@ def homotopy_type(graph):
     """Attempts to get a homotopy type using Dong's matching and vertex
     decomposability"""
     c_complex = clique_complex(graph)
+    star_c = h_type_using_star_cluster(graph)
+    if star_c:
+        return star_c
     dong1 = c_complex.dong_matching()
     if _read_dong(dong1)[0]:
         return _read_dong(dong1)[1]
