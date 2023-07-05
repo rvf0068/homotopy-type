@@ -67,6 +67,9 @@ def homotopy_type(graph):
     """Attempts to get a homotopy type using Dong's matching and vertex
     decomposability"""
     c_complex = clique_complex(graph)
+    disconnected_complement = h_type_as_join_complement(graph)
+    if disconnected_complement:
+        return disconnected_complement
     star_c = h_type_using_star_cluster(graph)
     if star_c:
         return star_c
@@ -405,7 +408,7 @@ def main():
                 start_time = timeit.default_timer()
                 p_g = p(graph)
                 h_g = homotopy_type(p_g)
-                k_g = k(p_g, 23)
+                k_g = k(p_g)
                 if k_g is not None:
                     pkg = nx.convert_node_labels_to_integers(p(k_g))
                     # hkg = homotopy_type(pkg)
