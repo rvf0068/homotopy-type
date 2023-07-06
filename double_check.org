@@ -55,27 +55,67 @@ len(list9)
 : 261080
 
 #+begin_src jupyter-python
-g = list9[249314]
+g = list9[249562]
 nx.draw(g, with_labels=True)
 #+end_src
 
-#+RESULTS[7f3d7560495cea1c162354dd99f54c13272d555d]:
-[[file:./.ob-jupyter/d55b83175e8357c8db78167a722e23b51c46579b.png]]
+#+RESULTS[6d901e94c46f1c3c64bf02d14fe1d9895007c9d8]:
+[[file:./.ob-jupyter/5eb0afe4243a351b67fb924124125ed004498517.png]]
+
+#+begin_src jupyter-python
+nx.draw(g.subgraph(set(g.nodes())-{5}))
+#+end_src
+
+#+RESULTS[2bc4e7e8038cc51b07b5fc445cfa400b11e9013b]:
+[[file:./.ob-jupyter/316dbd10ccff089710f7db269f1ffcd12da8fdb8.png]]
+
 
 #+begin_src jupyter-python
 homotopy_type(g)
 #+end_src
 
 #+RESULTS[0a65031658d1b0a0ed4adf3237d00928c254e21c]:
-: \(\vee_{2}S^{1}\vee S^{2}\)
+: \(S^{1}\)
 
 #+begin_src jupyter-python
 kg = p(k(g))
-homotopy_type(kg)
+homotopy_type(kg), kg.order()
 #+end_src
 
-#+RESULTS[dbfc8d64af483827e439deaefff38254d985b4d1]:
-: \(\vee_{2}S^{1}\vee S^{3}\)
+#+RESULTS[075292cec2b78ad443b0b7c282cb1130c6136186]:
+| \(S^{1}\) | 14 |
+
+#+begin_src jupyter-python
+k2g = p(k(kg))
+homotopy_type(k2g), k2g.order(), is_clique_helly(k2g)
+#+end_src
+
+#+RESULTS[d2490139a40c4720cad420c9c4689e7cbd3dfc83]:
+| \(S^{1}\) | 8 | False |
+
+#+begin_src jupyter-python
+nx.draw(k2g)
+#+end_src
+
+#+RESULTS[937bef7f9f4460c9f004dc3f36fe7c9b168b4146]:
+[[file:./.ob-jupyter/acdcc09ab05ea96897e9a282e4e9a1c11942151e.png]]
+
+#+begin_src jupyter-python
+k3g = p(k(k2g))
+homotopy_type(k3g), k3g.order(), is_clique_helly(k3g)
+#+end_src
+
+#+RESULTS[a51f2c803c85cfc51898b171df50e7ae67a29071]:
+| \(S^{1}\) | 9 | False |
+
+#+begin_src jupyter-python
+k4g = p(k(k3g))
+homotopy_type(k4g), k4g.order(), is_clique_helly(k4g)
+#+end_src
+
+#+RESULTS[c75ae1e2b13737a5d598340d8c91903d703d343d]:
+| \(S^{1}\) | 4 | True |
+
 
 #+begin_src jupyter-python
 c_v = find_special_cutpoint(g)
