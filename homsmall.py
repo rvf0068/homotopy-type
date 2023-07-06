@@ -369,7 +369,7 @@ def h_type_by_special_neigh(graph):
     if len(filt) > 0:
         v = filt[0]
         h = graph.subgraph(set(graph.nodes())-{v})
-        h_type = homotopy_type(h)
+        h_type = homotopy_type(nx.convert_node_labels_to_integers(h))
         if h_type == "Contractible":
             return "\\(S^{1}\\)"
         else:
