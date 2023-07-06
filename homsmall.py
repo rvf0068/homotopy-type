@@ -69,6 +69,8 @@ def _shuff(lista):
 def homotopy_type(graph):
     """Attempts to get a homotopy type using Dong's matching and vertex
     decomposability"""
+    if graph.order() == 1:
+        return "Contractible"
     c_complex = clique_complex(graph)
     disconnected_complement = h_type_as_join_complement(graph)
     if disconnected_complement:
@@ -309,6 +311,8 @@ def betti_numbers_c(simplicial_complex):
 
 
 def h_type_using_star_cluster(graph):
+    if graph.order() == 1:
+        return "Contractible"
     graph = nx.convert_node_labels_to_integers(graph)
     c_graph = nx.complement(graph)
     verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
