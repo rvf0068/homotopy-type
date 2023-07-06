@@ -349,7 +349,7 @@ def polynomial_to_list(polynomial):
 
 def h_type_as_join_complement(graph):
     x = symbols('x')
-    c_graph = nx.complement(graph)
+    c_graph = nx.complement(nx.convert_node_labels_to_integers(graph))
     comps = [c_graph.subgraph(c).copy() for c in nx.connected_components(c_graph)]
     if len(comps) > 1:
         compls = [clique_complex(nx.complement(s)) for s in comps]
