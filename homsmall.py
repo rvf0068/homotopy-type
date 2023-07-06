@@ -78,6 +78,9 @@ def homotopy_type(graph):
     star_c = h_type_using_star_cluster(graph)
     if star_c:
         return star_c
+    spec_n = h_type_by_special_neigh(graph)
+    if spec_n:
+        return spec_n
     dong1 = c_complex.dong_matching()
     if _read_dong(dong1)[0]:
         return _read_dong(dong1)[1]
