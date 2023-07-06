@@ -9,6 +9,7 @@ import mogutda
 import networkx as nx
 from sympy import symbols, Poly, Mul
 from pycliques.simplicial import (
+    Simplex,
     SimplicialComplex,
     clique_complex)
 from pycliques.dominated import completely_pared_graph as p
@@ -48,6 +49,8 @@ def _read_dong(dong):
 
 
 def read_betti_numbers(bettis):
+    if sum(bettis) == 0:
+        return "Contractible"
     betti = "\\("
     for index, betti_number in enumerate(bettis):
         if betti_number != 0:
@@ -192,7 +195,9 @@ def collapse(simplicial_complex, verbose=False):
         if free_face is None:
             all_done = True
         elif len(free_face) == 0:
-            return SimplicialComplex({}, {})
+            vertex = list(s_c.vertex_set)[0]
+            return SimplicialComplex(vertex_set={vertex},
+                                     facet_set={Simplex({vertex})})
         else:
             if verbose:
                 print(f"Free face: {free_face}")
