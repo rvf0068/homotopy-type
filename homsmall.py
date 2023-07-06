@@ -5,6 +5,7 @@ import argparse
 import random
 import re
 import timeit
+import gzip
 import mogutda
 import networkx as nx
 from sympy import symbols, Poly, Mul
@@ -21,6 +22,7 @@ from pycliques.cliques import clique_graph as k
 from pycliques.helly import is_clique_helly
 from pycliques.lists import list_graphs
 from pycliques.surfaces import open_neighborhood
+from pycliques.lists import graph10c
 
 
 def simplify_ht(graph):
@@ -412,43 +414,43 @@ def main():
     i = args.start
     with open(results, 'a', encoding="utf8") as the_file:
         the_file.write(HEADING)
-        for graph in all_graphs[(args.start+1):]:
-            i = i+1
-            print("\r", end='')
-            print(f"Currently on graph {i}", end='', flush=True)
-            if conditions(graph):
-                start_time = timeit.default_timer()
-                p_g = p(graph)
-                h_g = homotopy_type(p_g)
-                k_g = k(p_g)
-                if k_g is not None:
-                    pkg = nx.convert_node_labels_to_integers(p(k_g))
-                    # hkg = homotopy_type(pkg)
-                    c_v = find_special_cutpoint(graph)
-                    if c_v is not None:
-                        hkg = h_type_clique_graph_cutpoint(p_g, c_v)
+        with gzip.open(graph10c, 'rt') as graph_file:
+            for graph in graph_file:
+                i = i+1
+                print("\r", end='')
+                print(f"Currently on graph {i}", end='', flush=True)
+                if conditions(graph):
+                    start_time = timeit.default_timer()
+                    p_g = p(graph)
+                    h_g = homotopy_type(p_g)
+                    k_g = k(p_g)
+                    if k_g is not None:
+                        pkg = nx.convert_node_labels_to_integers(p(k_g))
+                        c_v = find_special_cutpoint(graph)
+                        if c_v is not None:
+                            hkg = h_type_clique_graph_cutpoint(p_g, c_v)
+                        else:
+                            hkg = homotopy_type(pkg)
+                        is_helly = is_clique_helly(graph)
+                        is_k_helly = is_clique_helly(pkg)
+                        if (not (is_helly and
+                                 ("S^{1}" in h_g or "S^{1}" in hkg)
+                                 )) and not (
+                                    is_k_helly and h_g == hkg and "S^{1}" in h_g):
+                            the_file.write("|" + str(i) +
+                                           "|" + str(p_g.order()) +
+                                           "|" + str(max_degree(graph)) +
+                                           "|" + str(is_helly) +
+                                           "|" + str(is_k_helly) +
+                                           "|" + str(h_g) +
+                                           "|" + str(hkg) +
+                                           "|\n")
                     else:
-                        hkg = homotopy_type(pkg)
-                    is_helly = is_clique_helly(graph)
-                    is_k_helly = is_clique_helly(pkg)
-                    if (not (is_helly and
-                             ("S^{1}" in h_g or "S^{1}" in hkg)
-                             )) and not (
-                                is_k_helly and h_g == hkg and "S^{1}" in h_g):
-                        the_file.write("|" + str(i) +
-                                       "|" + str(p_g.order()) +
-                                       "|" + str(max_degree(graph)) +
-                                       "|" + str(is_helly) +
-                                       "|" + str(is_k_helly) +
-                                       "|" + str(h_g) +
-                                       "|" + str(hkg) +
-                                       "|\n")
-                else:
-                    c_big = f"|{i}|Clique graph has at least 23 vertices|||||\n"
-                    the_file.write(c_big)
-                end_time = timeit.default_timer()
-                print(f" Graph {i} took {end_time-start_time}")
-    print("\n")
+                        c_big = f"|{i}|Clique graph has at least 23 vertices|||||\n"
+                        the_file.write(c_big)
+                    end_time = timeit.default_timer()
+                    print(f" Graph {i} took {end_time-start_time}")
+        print("\n")
 
 
 if __name__ == '__main__':
