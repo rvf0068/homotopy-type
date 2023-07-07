@@ -395,52 +395,51 @@ HEADING = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
 
 def main():
     """Main function"""
-    results = f"homotopy_types_{args.filename}.org"
+    parts = args.filename.split('/')
+    results = f"homotopy_types_{parts[-1]}.org"
 
     def conditions(graph):
         return (not has_dominated_vertex(graph)
                 and max_degree(graph) >= 5)
-    i = 0
+    i = -1
     with open(results, 'a', encoding="utf8") as the_file:
         the_file.write(HEADING)
-        with open(args.filename, 'r') as graph_file:
-            for graph in graph_file:
-                graph = graph.strip()
-                graph = nx.from_graph6_bytes(bytes(graph, 'utf8'))
-                i = i+1
-                print("\r", end='')
-                print(f"Currently on graph {i}", end='', flush=True)
-                if conditions(graph):
-                    start_time = timeit.default_timer()
-                    p_g = p(graph)
-                    h_g = homotopy_type(p_g)
-                    k_g = k(p_g)
-                    if k_g is not None:
-                        pkg = nx.convert_node_labels_to_integers(p(k_g))
-                        c_v = find_special_cutpoint(graph)
-                        if c_v is not None:
-                            hkg = h_type_clique_graph_cutpoint(p_g, c_v)
-                        else:
-                            hkg = homotopy_type(pkg)
-                        is_helly = is_clique_helly(graph)
-                        is_k_helly = is_clique_helly(pkg)
-                        if (not (is_helly and
-                                 ("S^{1}" in h_g or "S^{1}" in hkg)
-                                 )) and not (
-                                    is_k_helly and h_g == hkg and "S^{1}" in h_g):
-                            the_file.write("|" + str(i) +
-                                           "|" + str(p_g.order()) +
-                                           "|" + str(max_degree(graph)) +
-                                           "|" + str(is_helly) +
-                                           "|" + str(is_k_helly) +
-                                           "|" + str(h_g) +
-                                           "|" + str(hkg) +
-                                           "|\n")
+        graphs = nx.read_graph6(args.filename)
+        for graph in graphs:
+            i = i+1
+            print("\r", end='')
+            print(f"Currently on graph {i}", end='', flush=True)
+            if conditions(graph):
+                start_time = timeit.default_timer()
+                p_g = p(graph)
+                h_g = homotopy_type(p_g)
+                k_g = k(p_g)
+                if k_g is not None:
+                    pkg = nx.convert_node_labels_to_integers(p(k_g))
+                    c_v = find_special_cutpoint(graph)
+                    if c_v is not None:
+                        hkg = h_type_clique_graph_cutpoint(p_g, c_v)
                     else:
-                        c_big = f"|{i}|Clique graph has at least 23 vertices|||||\n"
-                        the_file.write(c_big)
-                    end_time = timeit.default_timer()
-                    print(f" Graph {i} took {end_time-start_time}")
+                        hkg = homotopy_type(pkg)
+                    is_helly = is_clique_helly(graph)
+                    is_k_helly = is_clique_helly(pkg)
+                    if (not (is_helly and
+                             ("S^{1}" in h_g or "S^{1}" in hkg)
+                             )) and not (
+                                is_k_helly and h_g == hkg and "S^{1}" in h_g):
+                        the_file.write("|" + str(i) +
+                                       "|" + str(p_g.order()) +
+                                       "|" + str(max_degree(graph)) +
+                                       "|" + str(is_helly) +
+                                       "|" + str(is_k_helly) +
+                                       "|" + str(h_g) +
+                                       "|" + str(hkg) +
+                                       "|\n")
+                else:
+                    c_big = f"|{i}|Clique graph has at least 23 vertices|||||\n"
+                    the_file.write(c_big)
+                end_time = timeit.default_timer()
+                print(f" Graph {i} took {end_time-start_time}")
         print("\n")
 
 
