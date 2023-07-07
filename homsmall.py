@@ -381,11 +381,11 @@ def h_type_by_special_neigh(graph):
                 m = re.search(pat, h_type)
                 if m is None:
                     # G-v contains only one copy of S^1
-                    return "\\(\\vee_{2}" + h_type
+                    return "\\(\\vee_{2}" + str(h_type)
                 inds = m.span(1)
                 newcadena = h_type[:inds[0]]+str(int(h_type[inds[0]: inds[1]])+1)+h_type[inds[1]:]
                 return "\\("+newcadena
-            return "\\(S^{1}\\vee " + h_type
+            return "\\(S^{1}\\vee " + str(h_type)
     return False
 
 
