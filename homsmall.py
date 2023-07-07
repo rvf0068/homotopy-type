@@ -395,27 +395,18 @@ HEADING = ("| index | order | max d | Helly | K Helly | HT G | HT KG |\n"
 
 def main():
     """Main function"""
-    if args.order == 7:
-        all_graphs = nx.graph_atlas_g()
-        results = "homotopy_types_up_to_7.org"
+    results = f"homotopy_types_{args.filename}.org"
 
-        def conditions(graph):
-            return (graph.order() > 1
-                    and nx.is_connected(graph)
-                    and not has_dominated_vertex(graph)
-                    and max_degree(graph) >= 5)
-    else:
-        all_graphs = list_graphs(args.order)
-        results = f"homotopy_types_{args.order}_{args.start}.org"
-
-        def conditions(graph):
-            return (not has_dominated_vertex(graph)
-                    and max_degree(graph) >= 5)
-    i = args.start
+    def conditions(graph):
+        return (not has_dominated_vertex(graph)
+                and max_degree(graph) >= 5)
+    i = 0
     with open(results, 'a', encoding="utf8") as the_file:
         the_file.write(HEADING)
-        with gzip.open(graph10c, 'rt') as graph_file:
+        with open(args.filename, 'r') as graph_file:
             for graph in graph_file:
+                graph = graph.strip()
+                graph = nx.from_graph6_bytes(bytes(graph, 'utf8'))
                 i = i+1
                 print("\r", end='')
                 print(f"Currently on graph {i}", end='', flush=True)
@@ -455,8 +446,7 @@ def main():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("order", type=int, help="Order of graphs examined")
-    parser.add_argument("--start", type=int, help="Index to start", default=-1)
+    parser.add_argument("filename", help="name of the file")
     args = parser.parse_args()
 
     main()
