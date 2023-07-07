@@ -44,6 +44,63 @@ star(s_c, 1)
 #+RESULTS[8f165a2da9289d693d703041ffcddbdcccc2174d]:
 : Simplicial complex with vertex_set {1, 2, 3, 4} and facets {{1, 3, 4}, {1, 2, 4}}.
 
+* 10 vertices
+
+#+begin_src jupyter-python
+graphs = nx.read_graph6("./data/graph10c002.g6")
+len(graphs)
+#+end_src
+
+#+RESULTS[9faaaa096966d53300754e91334002d2ac24984b]:
+: 100000
+
+#+begin_src jupyter-python
+g = graphs[79106]
+nx.draw(g)
+#+end_src
+
+#+RESULTS[2ddf4f92ea098ec4b7b10d42bb5767acacf1dbc1]:
+[[file:./.ob-jupyter/344987376384c9e3dfcd081bb58efbb0b12981dc.png]]
+
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS[0a65031658d1b0a0ed4adf3237d00928c254e21c]:
+: \(\vee_{3}S^{1}\vee S^{2}\)
+
+#+begin_src jupyter-python
+kg = p(k(g))
+kg.order()
+#+end_src
+
+#+RESULTS[77f867acb9b7426eb13c0ac87a7435acaa671ec3]:
+: 15
+
+#+begin_src jupyter-python :results scalar
+betti_numbers(nx.convert_node_labels_to_integers(kg))
+#+end_src
+
+#+RESULTS[a1726846ab78a7166ec8e225d9374c322c6026c3]:
+: [0, 3, 0, 1]
+
+#+begin_src jupyter-python
+homotopy_type(kg)
+#+end_src
+
+#+RESULTS[fbf2f7611a53e0e90798d306174f418b8531b3e5]:
+: \(\vee_{3}S^{1}\vee S^{3}\)
+
+#+begin_src jupyter-python
+c_v = find_special_cutpoint(g)
+c_v
+#+end_src
+
+#+RESULTS[24c2d7d850014e31f9d7ca5b2c692f5dc5bc85ec]:
+
+
+
 * 9 vertices
 
 #+begin_src jupyter-python
