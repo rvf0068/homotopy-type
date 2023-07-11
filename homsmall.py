@@ -248,13 +248,13 @@ def h_type_clique_graph_cutpoint(graph, vertex):
             m = re.search(pat, k_h_type)
             if m is None:
                 # K(G-v) contains only one copy of S^1
-                return f"\\(\\vee_{ {s_neigh} }" + k_h_type
+                return f"\\(\\vee_{ {s_neigh} }" + str(k_h_type)
             inds = m.span(1)
             newcadena = k_h_type[:inds[0]]+str(int(k_h_type[inds[0]: inds[1]])+s_neigh-1)+k_h_type[inds[1]:]
             return "\\("+newcadena
         if s_neigh == 2:
-            return "\\(S^{1}\\vee " + k_h_type
-        return f"\\(\\vee_{ {s_neigh-1} }S^{ {1} }\\vee " + k_h_type
+            return "\\(S^{1}\\vee " + str(k_h_type)
+        return f"\\(\\vee_{ {s_neigh-1} }S^{ {1} }\\vee " + str(k_h_type)
 
 
 def star(s_complex, vertex):
@@ -392,11 +392,11 @@ def h_type_by_special_neigh(graph):
                 m = re.search(pat, h_type)
                 if m is None:
                     # G-v contains only one copy of S^1
-                    return "\\(\\vee_{2}" + h_type
+                    return "\\(\\vee_{2}" + str(h_type)
                 inds = m.span(1)
                 newcadena = h_type[:inds[0]]+str(int(h_type[inds[0]: inds[1]])+1)+h_type[inds[1]:]
                 return "\\("+newcadena
-            return "\\(S^{1}\\vee " + h_type
+            return "\\(S^{1}\\vee " + str(h_type)
     return False
 
 
