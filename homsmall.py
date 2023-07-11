@@ -364,10 +364,21 @@ def h_type_as_join_complement(graph):
     return False
 
 
+def is_complete_graph(graph):
+    n = graph.order()
+    return graph.size == n*(n-1)/2
+
+
+def is_disjoint_union_of_two_completes(graph):
+    comps = [graph.subgraph(c).copy() for c in nx.connected_components(graph)]
+    return len(comps) == 2 and all([is_complete_graph(h) for h in comps])
+
+
 def h_type_by_special_neigh(graph):
     neighs = [(i, open_neighborhood(graph, i)) for i in graph.nodes()]
-    twok2 = nx.disjoint_union(nx.complete_graph(2), nx.complete_graph(2))
-    filt = [v for (v, nei) in neighs if nx.is_isomorphic(nei, twok2)]
+    # twok2 = nx.disjoint_union(nx.complete_graph(2), nx.complete_graph(2))
+    # filt = [v for (v, nei) in neighs if nx.is_isomorphic(nei, twok2)]
+    filt = [v for (v, nei) in neighs if is_disjoint_union_of_two_completes(nei)]
     if len(filt) > 0:
         v = filt[0]
         h = graph.subgraph(set(graph.nodes())-{v})
