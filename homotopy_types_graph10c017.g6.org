@@ -1,0 +1,31 @@
+| index | order | max d | Helly | K Helly | HT G | HT KG |
+|-------+-------+-------+-------+---------+------+-------|
+|9312|10|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|11656|10|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|11657|10|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|23085|10|6|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|23161|10|6|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|50230|10|6|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|50380|10|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|51018|10|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|51022|10|6|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|51114|10|6|False|False|\(\vee_{3}S^{1}\vee S^{2}\)|\(\vee_{3}S^{1}\vee S^{3}\)|
+|51124|10|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|51130|10|6|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|55480|10|6|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|57222|10|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|57632|10|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|57642|10|6|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|57708|10|6|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|57812|10|6|False|False|\(\vee_{3}S^{1}\vee S^{2}\)|\(\vee_{3}S^{1}\vee S^{3}\)|
+|57821|10|6|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|57864|10|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|57865|10|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|57896|10|5|False|False|\(\vee_{2}S^{1}\)|\(\vee_{2}S^{1}\)|
+|57897|10|6|False|False|\(\vee_{2}S^{1}\vee S^{2}\)|\(\vee_{2}S^{1}\vee S^{3}\)|
+|60930|10|6|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|61129|10|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|95590|10|6|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|95605|10|5|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|95650|10|6|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
+|96332|10|6|False|False|\(\vee_{4}S^{1}\)|\(\vee_{4}S^{1}\)|
