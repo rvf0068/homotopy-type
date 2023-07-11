@@ -379,8 +379,9 @@ def h_type_by_special_neigh(graph):
     # twok2 = nx.disjoint_union(nx.complete_graph(2), nx.complete_graph(2))
     # filt = [v for (v, nei) in neighs if nx.is_isomorphic(nei, twok2)]
     filt = [v for (v, nei) in neighs if is_disjoint_union_of_two_completes(nei)]
-    if len(filt) > 0:
-        v = filt[0]
+    filt2 = [v for v in filt if nx.is_connected(graph.subgraph(set(graph.nodes()-{v})))]
+    if len(filt2) > 0:
+        v = filt2[0]
         h = graph.subgraph(set(graph.nodes())-{v})
         h_type = homotopy_type(nx.convert_node_labels_to_integers(h))
         if h_type == "Contractible":
