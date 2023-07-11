@@ -366,7 +366,7 @@ def h_type_as_join_complement(graph):
 
 def is_complete_graph(graph):
     n = graph.order()
-    return graph.size == n*(n-1)/2
+    return graph.size() == n*(n-1)/2
 
 
 def is_disjoint_union_of_two_completes(graph):
