@@ -73,7 +73,6 @@ def homotopy_type(graph):
     decomposability"""
     if graph.order() == 1:
         return "Contractible"
-    c_complex = clique_complex(graph)
     disconnected_complement = h_type_as_join_complement(graph)
     if disconnected_complement:
         return disconnected_complement
@@ -83,6 +82,7 @@ def homotopy_type(graph):
     spec_n = h_type_by_special_neigh(graph)
     if spec_n:
         return spec_n
+    c_complex = clique_complex(graph)
     dong1 = c_complex.dong_matching()
     if _read_dong(dong1)[0]:
         return _read_dong(dong1)[1]
