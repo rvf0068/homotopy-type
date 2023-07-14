@@ -3110,7 +3110,7 @@
 |37760|10|7|False|False|\(S^{1}\)|\(S^{1}\)|
 |37762|10|7|False|False|\(\vee_{3}S^{1}\)|\(\vee_{3}S^{1}\)|
 |37769|10|7|False|False|Contractible|Contractible|
-|37792|10|7|False|False|\(\vee_{3}S^{2}\)|[0, 0, 1, 2]|
+|37792|10|7|False|False|\(\vee_{3}S^{2}\)|\(S^{2}\vee \vee_{2}S^{3}\)|
 |37867|10|7|False|False|\(\vee_{3}S^{2}\)|\(\vee_{2}S^{2}\vee S^{3}\)|
 |37891|10|7|False|False|\(\vee_{2}S^{2}\)|\(S^{2}\vee S^{3}\)|
 |37892|10|7|False|True|Contractible|Contractible|
