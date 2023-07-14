@@ -107,6 +107,7 @@ def special_vertex_in_s_c(s_c):
 
 
 def h_type_s_c_by_special_vertex(s_c):
+    s_c = collapse(s_c)
     vertex = special_vertex_in_s_c(s_c)
     if vertex is not None:
         s_c2 = s_c.deletion(vertex)
