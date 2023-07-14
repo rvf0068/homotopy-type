@@ -5,7 +5,6 @@ import argparse
 import random
 import re
 import timeit
-import gzip
 import mogutda
 import networkx as nx
 from sympy import symbols, Poly, Mul
@@ -14,15 +13,14 @@ from pycliques.simplicial import (
     SimplicialComplex,
     clique_complex)
 from pycliques.dominated import completely_pared_graph as p
+from pycliques.dominated import completely_pared_graph
 from pycliques.dominated import (
     has_dominated_vertex,
     complete_s_collapse,
     complete_s_collapse_edges)
 from pycliques.cliques import clique_graph as k
 from pycliques.helly import is_clique_helly
-from pycliques.lists import list_graphs
 from pycliques.surfaces import open_neighborhood
-from pycliques.lists import graph10c
 
 
 def simplify_ht(graph):
@@ -73,6 +71,7 @@ def homotopy_type(graph):
     decomposability"""
     if graph.order() == 1:
         return "Contractible"
+    graph = completely_pared_graph(graph)
     disconnected_complement = h_type_as_join_complement(graph)
     if disconnected_complement:
         return disconnected_complement
