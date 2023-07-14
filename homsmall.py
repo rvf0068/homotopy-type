@@ -97,10 +97,65 @@ def homotopy_type(graph):
         dong3 = c_complex2.dong_matching(order_function=_shuff)
         if _read_dong(dong3)[0]:
             return _read_dong(dong3)[1]
-    c_c = collapse(c_complex)
+    return homotopy_type_s_c(c_complex)
+
+
+def special_vertex_in_s_c(s_c):
+    for vertex in s_c.vertex_set:
+        if s_c.link(vertex).dimension() == 0:
+            return vertex
+    return None
+
+
+def h_type_s_c_by_special_vertex(s_c):
+    vertex = special_vertex_in_s_c(s_c)
+    if vertex is not None:
+        s_c2 = s_c.deletion(vertex)
+        h_type = homotopy_type_s_c(s_c2)
+        s_neigh = len(s_c.link(vertex).vertex_set)
+        return suspend_string_with_s1s(h_type, s_neigh)
+    return False
+
+
+def suspend_string_with_s1s(h_type, s_neigh):
+    if h_type == "Contractible":
+        if s_neigh == 2:
+            return "\\(S^{1}\\)"
+        else:
+            return f"\\(\\vee_{ {s_neigh-1} }S^{ {1} }\\)"
+    else:
+        h_type = h_type[2:]
+        if "S^{1}" in h_type:
+            pat = r"\_\{(\d+)\}S\^\{1\}"
+            m = re.search(pat, h_type)
+            if m is None:
+                # string contains only one copy of S^1
+                return f"\\(\\vee_{ {s_neigh} }" + str(h_type)
+            inds = m.span(1)
+            newcadena = h_type[:inds[0]]+str(int(h_type[inds[0]: inds[1]])+s_neigh-1)+h_type[inds[1]:]
+            return "\\("+newcadena
+        if s_neigh == 2:
+            return "\\(S^{1}\\vee " + str(h_type)
+        return f"\\(\\vee_{ {s_neigh-1} }S^{ {1} }\\vee " + str(h_type)
+
+
+def homotopy_type_s_c(s_c):
+    c_c = collapse(s_c)
+    dong1 = c_c.dong_matching()
+    if _read_dong(dong1)[0]:
+        return _read_dong(dong1)[1]
+    attempts = 0
+    while attempts < 5:
+        attempts = attempts + 1
+        dong3 = c_c.dong_matching(order_function=_shuff)
+        if _read_dong(dong3)[0]:
+            return _read_dong(dong3)[1]
+    h_type = h_type_s_c_by_special_vertex(s_c)
+    if h_type:
+        return h_type
     if is_vertex_decomposable(c_c):
-        return read_betti_numbers(betti_numbers(s_ht))
-    return betti_numbers(s_ht)
+        return read_betti_numbers(betti_numbers_c(c_c))
+    return betti_numbers_c(c_c)
 
 
 def dimension_sc(s_complex):
@@ -330,10 +385,12 @@ def h_type_using_star_cluster(graph):
         SC = star_cluster(IG, c_graph[vertex])
         int_c = intersection_complex(ST, SC)
         csc = collapse(int_c)
+        h_type = homotopy_type_s_c(csc)
+        if h_type:
+            return read_betti_numbers([0]+betti_numbers_c(csc))
         if is_vertex_decomposable(csc):
             return read_betti_numbers([0]+betti_numbers_c(csc))
-        else:
-            return False
+        return False
 
 
 def list_to_polynomial(lst):
