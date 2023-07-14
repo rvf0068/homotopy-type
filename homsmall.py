@@ -84,6 +84,9 @@ def homotopy_type(graph):
     spec_e = h_type_by_special_edges(graph)
     if spec_e:
         return spec_e
+    cut_p = h_type_by_cutpoints(graph)
+    if cut_p:
+        return cut_p
     c_complex = clique_complex(graph)
     dong1 = c_complex.dong_matching()
     if _read_dong(dong1)[0]:
@@ -464,7 +467,9 @@ def h_type_by_special_neigh(graph):
 def is_special_edge(graph, edge):
     n1 = open_neighborhood(graph, edge[0])
     n2 = open_neighborhood(graph, edge[1])
-    return len(set(n1).intersection(set(n2))) == 0
+    inter = set(n1).intersection(set(n2))
+    # avoid "threads" between components
+    return len(inter) == 0 and graph.degree(edge[0]) > 2 and  graph.degree(edge[1]) > 2
 
 
 def find_special_edges(graph):
@@ -489,6 +494,41 @@ def h_type_by_special_edges(graph):
                     expr_pols = [poly.as_expr() for poly in pols]
                     the_list = polynomial_to_list(Poly(Add(*expr_pols), x))
                     return read_betti_numbers(the_list)
+            return False
+        return False
+    return False
+
+
+def is_cutpoint(graph, vertex):
+    if nx.is_connected(graph):
+        c_graph = graph.copy()
+        c_graph.remove_node(vertex)
+        if not nx.is_connected(c_graph):
+            return True
+    return False
+
+
+def find_cutpoints(graph):
+    return [v for v in graph.nodes if is_cutpoint(graph, v)]
+
+
+def h_type_by_cutpoints(graph):
+    x = symbols('x')
+    graph = simplify_ht(graph)
+    if nx.is_connected(graph):
+        cutpoints = find_cutpoints(graph)
+        if cutpoints:
+            vertex = cutpoints[0]
+            c_graph = graph.copy()
+            c_graph.remove_node(vertex)
+            comps = [c.union({vertex}) for c in nx.connected_components(c_graph)]
+            comps = [graph.subgraph(c) for c in comps]
+            compls = [clique_complex(s) for s in comps]
+            if all([is_vertex_decomposable(collapse(c)) for c in compls]):
+                pols = [list_to_polynomial(betti_numbers_c(s)) for s in compls]
+                expr_pols = [poly.as_expr() for poly in pols]
+                the_list = polynomial_to_list(Poly(Add(*expr_pols), x))
+                return read_betti_numbers(the_list)
             return False
         return False
     return False
