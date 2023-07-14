@@ -7,7 +7,7 @@ import re
 import timeit
 import mogutda
 import networkx as nx
-from sympy import symbols, Poly, Mul
+from sympy import symbols, Poly, Add, Mul
 from pycliques.simplicial import (
     Simplex,
     SimplicialComplex,
@@ -81,6 +81,9 @@ def homotopy_type(graph):
     spec_n = h_type_by_special_neigh(graph)
     if spec_n:
         return spec_n
+    spec_e = h_type_by_special_edges(graph)
+    if spec_e:
+        return spec_e
     c_complex = clique_complex(graph)
     dong1 = c_complex.dong_matching()
     if _read_dong(dong1)[0]:
@@ -455,6 +458,39 @@ def h_type_by_special_neigh(graph):
                 newcadena = h_type[:inds[0]]+str(int(h_type[inds[0]: inds[1]])+1)+h_type[inds[1]:]
                 return "\\("+newcadena
             return "\\(S^{1}\\vee " + str(h_type)
+    return False
+
+
+def is_special_edge(graph, edge):
+    n1 = open_neighborhood(graph, edge[0])
+    n2 = open_neighborhood(graph, edge[1])
+    return len(set(n1).intersection(set(n2))) == 0
+
+
+def find_special_edges(graph):
+    edges = graph.edges()
+    return [e for e in edges if is_special_edge(graph, e)]
+
+
+def h_type_by_special_edges(graph):
+    x = symbols('x')
+    graph = simplify_ht(graph)
+    if nx.is_connected(graph):
+        sp_edges = find_special_edges(graph)
+        if sp_edges:
+            c_graph = graph.copy()
+            c_graph.remove_edges_from(sp_edges)
+            comps = [c_graph.subgraph(c).copy() for c in nx.connected_components(c_graph)]
+            if len(comps) == 2:
+                compls = [clique_complex(s) for s in comps]
+                if all([is_vertex_decomposable(collapse(c)) for c in compls]):
+                    pols = [list_to_polynomial(betti_numbers_c(s)) for s in compls]
+                    pols.append(list_to_polynomial([0, len(sp_edges)-1]))
+                    expr_pols = [poly.as_expr() for poly in pols]
+                    the_list = polynomial_to_list(Poly(Add(*expr_pols), x))
+                    return read_betti_numbers(the_list)
+            return False
+        return False
     return False
 
 
