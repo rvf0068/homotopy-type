@@ -71,7 +71,7 @@ def homotopy_type(graph):
     decomposability"""
     if graph.order() == 1:
         return "Contractible"
-    graph = completely_pared_graph(graph)
+    graph = simplify_ht(graph)
     disconnected_complement = h_type_as_join_complement(graph)
     if disconnected_complement:
         return disconnected_complement
