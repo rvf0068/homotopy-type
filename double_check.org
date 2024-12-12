@@ -6,6 +6,8 @@
 import argparse
 import random
 import re
+import math
+import matplotlib.pyplot as plt
 import mogutda
 import networkx as nx
 from pycliques.simplicial import clique_complex, nerve_of_sets
@@ -15,52 +17,546 @@ from pycliques.dominated import (
     complete_s_collapse,
     complete_s_collapse_edges
     )
-from pycliques.cliques import clique_graph as k
+from pycliques.cliques import clique_graph as kfrom pycliques.cliques import clique_graph as k
+from pycliques.cliques import Clique
 from pycliques.helly import is_clique_helly
 from pycliques.lists import list_graphs
 from pycliques.surfaces import open_neighborhood
 
 from homsmall import *
+
+def plot_neighborhoods(g):
+    n = g.order()
+    for i in range(n):
+        rows = int(math.sqrt(n))
+        columns = math.ceil(n/rows)
+        plt.subplot(rows, columns, i+1)
+        plt.title(i)
+        nx.draw(open_neighborhood(g, i), node_size=200, with_labels='True')
+    plt.show()
 #+end_src
 
-#+RESULTS[711bdb9e9186bd27f28487aeeb7af024203f7f19]:
+#+RESULTS[504e152d7b74288cbb2350cb9467bcad79fb003c]:
 
 * Test
 
 #+begin_src jupyter-python :results scalar
 from pycliques.simplicial import SimplicialComplex
-from pycliques.named import suspension_of_cycle
 
-
+s_c = SimplicialComplex([1,2,3,4,5,6], facet_set=[{1,3,4,6}, {1,2,4}, {2,4,5}, {3, 6}, {5, 6}])
+homotopy_type_s_c(s_c)
 #+end_src
 
-#+RESULTS[a3add7a9255d0a9964cbb9b4c0f42cde4d14d8c5]:
+#+RESULTS[c7b4607cda64ddb876b4b4efc30107c78cfc739b]:
+: '\\(S^{1}\\)'
 
-#+begin_src jupyter-python :results scalar
-s_c = SimplicialComplex([1,2,3,4,5], facet_set=[{1,3,4}, {1,2,4}, {2,4,5}])
-star(s_c, 1)
+#+begin_src jupyter-python
+suspend_string_with_s1s("\\(S^{1}\\vee S^{2}\\)", 2)
 #+end_src
 
-#+RESULTS[8f165a2da9289d693d703041ffcddbdcccc2174d]:
-: Simplicial complex with vertex_set {1, 2, 3, 4} and facets {{1, 3, 4}, {1, 2, 4}}.
+#+RESULTS[6141dcc69fd51c4df6b309bdf8b97d19ae0cc9c1]:
+: \(\vee_{2}S^{1}\vee S^{2}\)
 
 * 10 vertices
 
+** file 15
+
 #+begin_src jupyter-python
-graphs = nx.read_graph6("./data/graph10c002.g6")
+graphs = nx.read_graph6("./data/graph10c015.g6")
 len(graphs)
 #+end_src
 
-#+RESULTS[9faaaa096966d53300754e91334002d2ac24984b]:
+#+RESULTS[546eb37daa0b42ac2696b281d51dbc11a31a7bd3]:
 : 100000
 
 #+begin_src jupyter-python
-g = graphs[79106]
-nx.draw(g)
+g = graphs[75299]
+nx.draw(g, with_labels=True)
 #+end_src
 
-#+RESULTS[2ddf4f92ea098ec4b7b10d42bb5767acacf1dbc1]:
-[[file:./.ob-jupyter/344987376384c9e3dfcd081bb58efbb0b12981dc.png]]
+#+RESULTS[bf838a9617d4d5e4c17ea62a60be34d55b25c575]:
+[[file:./.ob-jupyter/1e07a0272621eb5a7d46cce627ca4e872572a6ce.png]]
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS[0a65031658d1b0a0ed4adf3237d00928c254e21c]:
+: \(\vee_{5}S^{1}\vee S^{2}\)
+
+#+begin_src jupyter-python :results scalar
+betti_numbers(nx.convert_node_labels_to_integers(g))
+#+end_src
+
+#+RESULTS[d72c9d11be723936ab591f972af1104a7dbbe304]:
+: [0, 5, 1]
+
+#+begin_src jupyter-python
+h_type_using_star_cluster(g)
+#+end_src
+
+#+RESULTS[9666f24ed3bc3cb45703dbcf0394d7800867b4c8]:
+: False
+
+#+begin_src jupyter-python
+h_type_by_special_neigh(g)
+#+end_src
+
+#+RESULTS[da82a8298c9583f11882248f10c133f02e86cb9c]:
+: False
+
+#+begin_src jupyter-python
+graph = g
+neighs = [(i, open_neighborhood(graph, i)) for i in graph.nodes()]
+filt = [v for (v, nei) in neighs if is_disjoint_union_of_two_completes(nei)]
+filt2 = [v for v in filt if nx.is_connected(graph.subgraph(set(graph.nodes()-{v})))]
+filt2
+#+end_src
+
+#+RESULTS[8668091b812f4fea342b524d0a01a3dea36fab80]:
+| 0 | 3 |
+
+#+begin_src jupyter-python
+v = filt2[0]
+h = graph.subgraph(set(graph.nodes())-{v})
+h_type = homotopy_type(nx.convert_node_labels_to_integers(h))
+h_type
+#+end_src
+
+#+RESULTS[f6415402789e78333a96309d7184a2954d598803]:
+: \(\vee_{3}S^{1}\vee S^{0}\vee S^{2}\)
+
+#+begin_src jupyter-python
+nx.draw(h, with_labels=True)
+#+end_src
+
+#+RESULTS[9bc0ff8288ae7daa2abd0cdf6ee1469f4a44a3e0]:
+[[file:./.ob-jupyter/7c5d738845245e2ad5b20225cf3ebb26b258f43c.png]]
+
+
+#+begin_src jupyter-python
+betti_numbers(nx.convert_node_labels_to_integers(h))
+#+end_src
+
+#+RESULTS[16031949c7d82a5d16ec441e77f1923e1cdd30d3]:
+| 0 | 2 | 1 |
+
+#+begin_src jupyter-python
+homotopy_type(h)
+#+end_src
+
+#+RESULTS[29fe9fe1f949efd0d2a664d08528a50c55e174d9]:
+: \(\vee_{3}S^{1}\vee S^{0}\vee S^{2}\)
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(h))
+#+end_src
+
+#+RESULTS[cb38b21b18dad5c5a37e30d591aa0622597a19f1]:
+[[file:./.ob-jupyter/ecb2cb5a85565d580d88c81ea916b3bca494e68f.png]]
+
+#+begin_src jupyter-python
+h_type_using_star_cluster(h)
+#+end_src
+
+#+RESULTS[76008ebb38de474519ff9bca95c8280fc5928078]:
+: False
+
+#+begin_src jupyter-python
+h_type_by_special_neigh(h)
+#+end_src
+
+#+RESULTS[4979ab9a7bd617753eb65e38e68840bb2f688935]:
+: \(\vee_{3}S^{1}\vee S^{0}\vee S^{2}\)
+
+#+begin_src jupyter-python :results scalar
+graph = h
+neighs = [(i, open_neighborhood(graph, i)) for i in graph.nodes()]
+filt = [v for (v, nei) in neighs if is_disjoint_union_of_two_completes(nei)]
+filt2 = [v for v in filt if nx.is_connected(graph.subgraph(set(graph.nodes()-{v})))]
+filt2
+#+end_src
+
+#+RESULTS[4a05f858d00b826b97365488589ff99942f79b57]:
+: [3, 6]
+
+#+begin_src jupyter-python
+v = filt2[0]
+h2 = graph.subgraph(set(graph.nodes())-{v})
+h_type = homotopy_type(nx.convert_node_labels_to_integers(h2))
+h_type
+#+end_src
+
+#+RESULTS:
+: \(\vee_{2}S^{1}\vee S^{0}\vee S^{2}\)
+
+#+begin_src jupyter-python
+nx.draw(h2, with_labels=True)
+#+end_src
+
+#+RESULTS[5fefafb0a2db8053bd9ac986ea2b43f394b74f60]:
+[[file:./.ob-jupyter/3beb4f89341b6e98455d17bf56ed77f7fb0f43a1.png]]
+
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(g), with_labels=True)
+#+end_src
+
+#+RESULTS[dac7ea45379cb9e5d94906e8ae5b91fdc695b488]:
+[[file:./.ob-jupyter/fe0f4105fe994740d717f64d77f45929891547e4.png]]
+
+
+#+begin_src jupyter-python
+kg = k(g)
+kg.order()
+#+end_src
+
+#+RESULTS[59755e62105ba8e6b8505f94d21109ffd85c24ba]:
+: 20
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(kg), with_labels=True)
+#+end_src
+
+#+RESULTS[e2e989d14cf8f110ee33a8a52036b6f910f71f10]:
+[[file:./.ob-jupyter/5e442432005b07fdad7cb02c23fa58dcf3e3d102.png]]
+
+
+#+begin_src jupyter-python :async yes
+%time homotopy_type(kg)
+#+end_src
+
+#+RESULTS[c040a406e02f5a4f791f5a3cf20cdb5e3ad246c6]:
+:results:
+: CPU times: user 45.6 ms, sys: 414 µs, total: 46 ms
+: Wall time: 44.9 ms
+: \(S^{2}\vee \vee_{2}S^{3}\)
+:end:
+
+#+begin_src jupyter-python :results scalar
+betti_numbers(nx.convert_node_labels_to_integers(kg))
+#+end_src
+
+#+RESULTS[a1726846ab78a7166ec8e225d9374c322c6026c3]:
+: [0, 0, 1, 2]
+
+
+#+begin_src jupyter-python :results scalar
+graph=kg
+graph = nx.convert_node_labels_to_integers(graph)
+c_graph = nx.complement(graph)
+verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
+verts
+#+end_src
+
+#+RESULTS[6543c0f2292a2b3c513998c2d68e7ef8960119e5]:
+: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+
+#+begin_src jupyter-python
+vertex=0
+IG = clique_complex(graph)
+ST = star(IG, vertex)
+SC = star_cluster(IG, c_graph[vertex])
+ST, SC
+#+end_src
+
+#+RESULTS[cdfde9bf52ede565cd0c3766d6234724e5afa2e7]:
+: '(Simplicial complex with vertex_set (0  1  2  3  4  5  6  7  8  9  10  11  12  13) and facets ((0  1  4  5  11)  (0  1  2  3  10)  (0  2  3  7  13)  (0  1  10  11)  (0  2  3  10  12  13)  (0  1  2  3  4  5  6  7  8  9)  (0  2  3  6  12)  (0  10  11  12  13)). 
+:  Simplicial complex with vertex_set (1  2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18  19) and facets ((8  19  5  14)  (17  3  6  7  8  9)  (16  2  10  12  13)  (19  5  11  14  15)  (16  2  12  6)  (17  3  12  6)  (18  4  6  7  8  9)  (10  11  12  13  14  15  16  17  18  19)  (17  3  10  12  13)  (9  19  5  15)  (1  4  5  8  14)  (16  17  18  19  7  13)  (19  5  6  7  8  9)  (16  2  6  7  8  9)  (18  4  11  14  15)  (1  4  5  9  15)  (16  17  18  19  8  14)  (8  18  4  14)  (16  2  13  7)  (1  10  11  14  15)  (6  7  8  9  16  17  18  19)  (16  17  18  19  6  12)  (16  17  18  19  9  15)  (9  18  4  15)  (17  3  13  7)  (1  4  5  11  14  15)).)
+
+#+begin_src jupyter-python
+int_c = intersection_complex(ST, SC)
+int_c
+#+end_src
+
+#+RESULTS[f1f0510225ccfd0764ac48080bd667f8aace410e]:
+: Simplicial complex with vertex_set {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13} and facets {{10, 11, 12, 13}, {2, 13, 7}, {2, 10, 12, 13}, {8, 1, 4, 5}, {1, 4, 5, 9}, {10, 3, 12, 13}, {3, 12, 6}, {1, 11, 4, 5}, {3, 6, 7, 8, 9}, {2, 12, 6}, {1, 10, 11}, {4, 6, 7, 8, 9}, {5, 6, 7, 8, 9}, {2, 6, 7, 8, 9}, {3, 13, 7}}.
+
+#+begin_src jupyter-python
+csc = collapse(int_c)
+csc
+#+end_src
+
+#+RESULTS[dd822ebb04f25f10c4ce061b62362bfddad241ee]:
+: Simplicial complex with vertex_set {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13} and facets {{2, 13, 7}, {8, 1, 5}, {9, 4, 6}, {3, 12, 13}, {8, 1, 4}, {9, 4, 5}, {3, 13, 7}, {10, 12, 13}, {2, 12, 6}, {11, 4}, {8, 9, 6}, {11, 13}, {2, 6, 7}, {8, 4, 6}, {2, 10, 12}, {1, 4, 5}, {3, 6, 7}, {8, 9, 5}, {3, 12, 6}, {2, 10, 13}}.
+
+#+begin_src jupyter-python
+special_vertex_in_s_c(csc)
+#+end_src
+
+#+RESULTS[6ae13e145ed25025971182030b30e8227d2d3dad]:
+: 11
+
+#+begin_src jupyter-python :results scalar
+s_c = csc
+vertex = 11
+s_c2 = s_c.deletion(vertex)
+h_type = homotopy_type_s_c(s_c2)
+s_neigh = len(s_c.link(11).vertex_set)
+h_type, s_neigh
+#+end_src
+
+#+RESULTS[695a1bcaa9ee8d00ab9b9131a38eaa229f0f9d33]:
+: ('\\(\\vee_{2}S^{2}\\)', 2)
+
+#+begin_src jupyter-python
+homotopy_type_s_c(csc)
+#+end_src
+
+#+RESULTS[c5d601cedec923c22244ef96602f93d0d3fc256e]:
+: \(S^{1}\vee \vee_{2}S^{2}\)
+
+
+#+begin_src jupyter-python
+csc2 = csc.deletion(11)
+csc2
+#+end_src
+
+#+RESULTS[e5b1b796e8a58796e6b1f86828fbd2b45899c73e]:
+: Simplicial complex with vertex_set {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13} and facets {{2, 13, 7}, {8, 9, 6}, {8, 1, 5}, {2, 6, 7}, {9, 4, 6}, {3, 12, 13}, {10, 12, 13}, {8, 9, 5}, {3, 12, 6}, {2, 10, 13}, {2, 12, 6}, {8, 4, 6}, {2, 10, 12}, {1, 4, 5}, {8, 1, 4}, {3, 6, 7}, {9, 4, 5}, {3, 13, 7}}.
+
+#+begin_src jupyter-python
+is_vertex_decomposable(csc2)
+#+end_src
+
+#+RESULTS[978d5a388faa9961ed7d7b66189d4b37e226a8f8]:
+: False
+
+#+begin_src jupyter-python :results scalar
+csc2.dong_matching(order_function=_shuff)
+#+end_src
+
+#+RESULTS[38c5b5b25b06d55c5245665253514a2ff3bd7585]:
+: {{2, 10, 12}, {9, 4, 5}}
+
+
+#+begin_src jupyter-python
+is_vertex_decomposable(csc)
+#+end_src
+
+#+RESULTS[c2e0eaee9580a80bd52ebb98847acc1a339794ac]:
+: False
+
+#+begin_src jupyter-python
+csc.is_clique_complex()
+#+end_src
+
+#+RESULTS[2f9774427da278b00f323bedbb2a593451ce6959]:
+: False
+
+
+#+begin_src jupyter-python :results scalar
+def _shuff(lista):
+    return random.sample(list(lista), len(lista))
+
+csc.dong_matching(order_function=_shuff)
+#+end_src
+
+#+RESULTS[9ecbb04ea3c324fb3804719e482ae6d801e2793c]:
+: {{8, 9, 6}, {10, 12, 13}, {11, 13}}
+
+#+begin_src jupyter-python :results scalar
+betti_numbers_c(csc)
+#+end_src
+
+#+RESULTS[ee4037d4f65fb31beb9a5c1c562d899123df3c1d]:
+: [0, 1, 2]
+
+
+
+** file 16
+
+#+begin_src jupyter-python
+graphs = nx.read_graph6("./data/graph10c016.g6")
+len(graphs)
+#+end_src
+
+#+RESULTS[046fb76b6c91ca89e71eab45b54a0f7a6e054f78]:
+: 100000
+
+*** 65424
+
+#+begin_src jupyter-python
+g = graphs[65424]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[7b1f642e67623ed939b269e4f788fe48bb0d6ece]:
+[[file:./.ob-jupyter/b91a6bd5bddd681576334bf7ab4a8e4e62664fa8.png]]
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS[0a65031658d1b0a0ed4adf3237d00928c254e21c]:
+: \(\vee_{8}S^{2}\)
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(g), with_labels=True)
+#+end_src
+
+#+RESULTS[dac7ea45379cb9e5d94906e8ae5b91fdc695b488]:
+[[file:./.ob-jupyter/8a6b4cf7164a1949bb476cc7b2bbcf0f956daded.png]]
+
+
+#+begin_src jupyter-python
+c_v = find_special_cutpoint(g)
+c_v
+#+end_src
+
+#+RESULTS:
+
+
+#+begin_src jupyter-python :results scalar
+kg = k(g)
+kg.order()
+#+end_src
+
+#+RESULTS[754a3660756ecbe6438f4931bf8d4ec945f79778]:
+: 30
+
+#+begin_src jupyter-python :async yes
+%time homotopy_type(kg)
+#+end_src
+
+#+RESULTS:
+:results:
+: CPU times: user 10.4 s, sys: 676 ms, total: 11 s
+: Wall time: 10.7 s
+: \(\vee_{52}S^{3}\)
+:end:
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(kg))
+#+end_src
+
+#+RESULTS[470f322eec84af19d6222d75f97f716fea377d82]:
+[[file:./.ob-jupyter/c55cbb4bfa9e0d1e56f032d09101d04fdf583a3d.png]]
+
+#+begin_src jupyter-python
+h_type_by_special_neigh(kg)
+#+end_src
+
+#+RESULTS[00fb8862b3e6559e2fba69866ba0d0dacafae2cc]:
+: False
+
+#+begin_src jupyter-python
+h_type_using_star_cluster(kg)
+#+end_src
+
+#+RESULTS[12c9449c65728141c6f781e6b24de3cf1404c79b]:
+: \(\vee_{52}S^{3}\)
+
+
+#+begin_src jupyter-python
+h_graph = g.subgraph(set(g.nodes())-{1})
+kh = k(h_graph)
+nx.draw(kh, with_labels=True)
+#+end_src
+
+#+RESULTS[325f36810743b4ef7707871af1faee9920f2eabb]:
+[[file:./.ob-jupyter/5e696e4cd7dd49f40d0f04418fe7b56a4988a5bf.png]]
+
+#+begin_src jupyter-python
+homotopy_type(kh)
+#+end_src
+
+#+RESULTS:
+: \(\vee_{3}S^{1}\)
+
+#+begin_src jupyter-python :results scalar
+graph = kh
+neighs = [(i, open_neighborhood(graph, i)) for i in graph.nodes()]
+filt = [v for (v, nei) in neighs if is_disjoint_union_of_two_completes(nei)]
+filt
+#+end_src
+
+
+#+RESULTS[521d754155f212e59d766c6319de8d8b1b010c77]:
+: [{8, 0}, {8, 2}, {8, 4}, {9, 4}, {0, 6}, {3, 6}, {0, 5, 7}]
+
+#+begin_src jupyter-python
+u = Clique({0,8})
+nx.draw(open_neighborhood(kh, u), with_labels=True)
+#+end_src
+
+#+RESULTS[d996ce5be6c616f677db37342d2a53d3b53bb223]:
+[[file:./.ob-jupyter/b2b983841678948b4785b0159abe8ce8feb7c937.png]]
+
+#+begin_src jupyter-python
+h2_graph = kh.subgraph(set(kh.nodes())-{u})
+nx.draw(h2_graph, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/11ba6cc78356e8e0087394c7c66d223fcbf0cd02.png]]
+#+begin_src jupyter-python
+%time homotopy_type(h2_graph)
+#+end_src
+
+#+begin_src jupyter-python :results scalar
+graph = h2_graph
+neighs = [(i, open_neighborhood(graph, i)) for i in graph.nodes()]
+filt = [v for (v, nei) in neighs if is_disjoint_union_of_two_completes(nei)]
+filt
+#+end_src
+
+#+RESULTS[87516e6e3648e73be1d93b3fe92ff481c6e0307b]:
+: [{8, 2}, {8, 4}, {9, 4}, {0, 6}, {3, 6}, {0, 5, 7}]
+
+#+begin_src jupyter-python
+h3_graph = h2_graph.subgraph(set(h2_graph.nodes())-{Clique({8,2})})
+nx.draw(h3_graph, with_labels=True)
+#+end_src
+
+#+RESULTS[b2225d4b30fc89dd9e10610d55455068c688f509]:
+[[file:./.ob-jupyter/51c8aa93e6823904151fba045160c28fa26b55f4.png]]
+
+#+begin_src jupyter-python
+homotopy_type(h3_graph)
+#+end_src
+
+#+begin_src jupyter-python :results scalar
+graph = h3_graph
+neighs = [(i, open_neighborhood(graph, i)) for i in graph.nodes()]
+filt = [v for (v, nei) in neighs if is_disjoint_union_of_two_completes(nei)]
+filt
+#+end_src
+
+#+RESULTS[ba0fb0472e819f745bc112e4ad199192afdc6941]:
+: [{9, 4}, {0, 6}, {3, 6}, {0, 5, 7}]
+
+
+#+begin_src jupyter-python
+read_betti_numbers([])
+#+end_src
+
+#+RESULTS[d8661ff22f52f9d57de1e50dc9b19f3636a8c4b2]:
+: Contractible
+
+#+begin_src jupyter-python
+import mogutda
+a=mogutda[0m[0;34m.[0m[0mSimplicialComplex[0m[0;34m([0m[0msimplices[0m[0;34m=[0m[0m[])[0m[0;34m[0m[0;34m[0m[0m
+#+end_src
+
+#+RESULTS[ef76ade66dba9a4068d43683aac748ef4f6667bb]:
+:RESULTS:
+# [goto error]
+: [0;36m  File [0;32m"<ipython-input-35-6aae8895981f>"[0;36m, line [0;32m2[0m
+: [0;31m    a=mogutda[0m[0;34m.[0m[0mSimplicialComplex[0m[0;34m([0m[0msimplices[0m[0;34m=[0m[0m[])[0m[0;34m[0m[0;34m[0m[0m[0m
+: [0m             ^[0m
+: [0;31mSyntaxError[0m[0;31m:[0m invalid syntax
+:END:
+
+*** 41365
+
+#+begin_src jupyter-python
+g = graphs[41365]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[7de4a73e73da4ead6e75ff6ab3fe8ec5172e9610]:
+[[file:./.ob-jupyter/92934e191bc465498faf39006297626705fd9df4.png]]
 
 
 #+begin_src jupyter-python
@@ -68,7 +564,7 @@ homotopy_type(g)
 #+end_src
 
 #+RESULTS[0a65031658d1b0a0ed4adf3237d00928c254e21c]:
-: \(\vee_{3}S^{1}\vee S^{2}\)
+: \(\vee_{2}S^{1}\vee \vee_{2}S^{2}\)
 
 #+begin_src jupyter-python
 kg = p(k(g))
@@ -76,21 +572,14 @@ kg.order()
 #+end_src
 
 #+RESULTS[77f867acb9b7426eb13c0ac87a7435acaa671ec3]:
-: 15
+: 18
 
 #+begin_src jupyter-python :results scalar
 betti_numbers(nx.convert_node_labels_to_integers(kg))
 #+end_src
 
 #+RESULTS[a1726846ab78a7166ec8e225d9374c322c6026c3]:
-: [0, 3, 0, 1]
-
-#+begin_src jupyter-python
-homotopy_type(kg)
-#+end_src
-
-#+RESULTS[fbf2f7611a53e0e90798d306174f418b8531b3e5]:
-: \(\vee_{3}S^{1}\vee S^{3}\)
+: [0, 2, 0, 4]
 
 #+begin_src jupyter-python
 c_v = find_special_cutpoint(g)
@@ -98,8 +587,1378 @@ c_v
 #+end_src
 
 #+RESULTS[24c2d7d850014e31f9d7ca5b2c692f5dc5bc85ec]:
+: 2
+
+#+begin_src jupyter-python
+h_graph = g.subgraph(set(g.nodes())-{2})
+kh = k(h_graph)
+nx.draw(kh, with_labels=True)
+#+end_src
+
+#+RESULTS[f8f934337464729db2bbe040c8cbabfa57d7e987]:
+[[file:./.ob-jupyter/0f0f5d443f7095a7524a0e69408e7418171fb165.png]]
+
+#+begin_src jupyter-python :results scalar
+graph = kh
+neighs = [(i, open_neighborhood(graph, i)) for i in graph.nodes()]
+filt = [v for (v, nei) in neighs if is_disjoint_union_of_two_completes(nei)]
+filt
+#+end_src
+
+#+RESULTS[1c333d02cb5f4160999d7e525a48af2249087cea]:
+: [{0, 5}, {1, 5}]
 
 
+#+begin_src jupyter-python
+h_type_by_special_neigh(kh)
+#+end_src
+
+#+RESULTS[c8bee3eb674935693937ec6c7532056381cba15e]:
+: \(S^{1}\vee \vee_{4}S^{3}\)
+
+#+begin_src jupyter-python
+homotopy_type(kh)
+#+end_src
+
+#+RESULTS[521d754155f212e59d766c6319de8d8b1b010c77]:
+: \(S^{1}\vee \vee_{4}S^{3}\)
+
+#+begin_src jupyter-python
+u = Clique({1,5})
+nx.draw(open_neighborhood(kh, u), with_labels=True)
+#+end_src
+
+#+RESULTS[876b5d3b9083835dac2061923d5f97e8765dda32]:
+[[file:./.ob-jupyter/ce8ea82973373692db0041b7ec10e2dba604233e.png]]
+
+#+begin_src jupyter-python
+is_disjoint_union_of_two_completes(open_neighborhood(kh,u))
+#+end_src
+
+#+RESULTS[7f32d6ad26df662b69aaa4454e74a3479a9d9643]:
+: False
+
+
+#+begin_src jupyter-python
+homotopy_type(kh)
+#+end_src
+
+#+begin_src jupyter-python
+h_type_by_special_neigh(kh)
+#+end_src
+
+
+#+begin_src jupyter-python
+h2_graph = kh.subgraph(set(kh.nodes())-{u})
+nx.draw(h2_graph, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/015f8add3b84515637bc762db15b14560d530f45.png]]
+
+#+begin_src jupyter-python
+%time homotopy_type(h2_graph)
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: CPU times: user 24.4 ms, sys: 151 µs, total: 24.6 ms
+: Wall time: 23.2 ms
+: \(\vee_{4}S^{3}\)
+:END:
+
+
+#+begin_src jupyter-python
+h_type_as_join_complement(kh)
+#+end_src
+
+#+RESULTS[21561281749cef2e2fdf0dd427553c1d2197a8c1]:
+: False
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(kh), with_labels=True)
+#+end_src
+
+#+RESULTS[d4983db439c31e201bf3d28762a2e4fcbcbe5269]:
+[[file:./.ob-jupyter/a827e9174de0684c59ec7c24a335d60c50f7cd4a.png]]
+
+#+begin_src jupyter-python
+h_type_using_star_cluster(kh)
+#+end_src
+
+#+RESULTS[70930637f383572927f9c6768ba6859ca2f9ff2e]:
+: False
+
+#+begin_src jupyter-python
+h_type_by_special_neigh(kh)
+#+end_src
+
+#+RESULTS[c8bee3eb674935693937ec6c7532056381cba15e]:
+: False
+
+*** 41377
+
+#+begin_src jupyter-python
+g = graphs[41377]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/5512471e788389ee77be6930ebb475fd3ec00040.png]]
+
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS[0a65031658d1b0a0ed4adf3237d00928c254e21c]:
+: \(\vee_{2}S^{1}\vee \vee_{3}S^{2}\)
+
+#+begin_src jupyter-python
+kg = p(k(g))
+kg.order()
+#+end_src
+
+#+RESULTS:
+: 20
+
+#+begin_src jupyter-python :results scalar
+betti_numbers(nx.convert_node_labels_to_integers(kg))
+#+end_src
+
+#+RESULTS:
+: [0, 2, 0, 9]
+
+#+begin_src jupyter-python
+homotopy_type(kg)
+#+end_src
+
+#+begin_src jupyter-python
+c_v = find_special_cutpoint(g)
+c_v
+#+end_src
+
+#+RESULTS:
+: 2
+
+#+begin_src jupyter-python
+h_graph = g.subgraph(set(g.nodes())-{2})
+kh = k(h_graph)
+nx.draw(kh, with_labels=True)
+#+end_src
+
+#+RESULTS[f8f934337464729db2bbe040c8cbabfa57d7e987]:
+[[file:./.ob-jupyter/56f337b1967e541bbc8919cb07ce49d6de840f47.png]]
+
+#+begin_src jupyter-python
+h_type_by_special_neigh(kh)
+#+end_src
+
+#+RESULTS[c8bee3eb674935693937ec6c7532056381cba15e]:
+: \(S^{1}\vee \vee_{9}S^{3}\)
+
+
+#+begin_src jupyter-python
+u = Clique({1,5})
+nx.draw(open_neighborhood(kh, u), with_labels=True)
+#+end_src
+
+#+RESULTS[ca5d9f7cb8dc4335a82e6d964885caacddedb3b4]:
+[[file:./.ob-jupyter/2a00657ec6745a8b578a14c8cb78167fdf9995f1.png]]
+
+#+begin_src jupyter-python
+h2_graph = kh.subgraph(set(kh.nodes())-{u})
+nx.draw(h2_graph, with_labels=True)
+#+end_src
+
+#+RESULTS[b39777b6557dfe4e1e96de21cfb3f105b7e13328]:
+[[file:./.ob-jupyter/ae5c3e62e6a3ec4fac1e36f7d9bc78c2fcd14251.png]]
+
+#+begin_src jupyter-python
+%time homotopy_type(h2_graph)
+#+end_src
+
+#+RESULTS[edbe8985a6f591376e308ae1329b1dfc0765eb54]:
+:RESULTS:
+: CPU times: user 42.8 ms, sys: 1.2 ms, total: 44 ms
+: Wall time: 42.8 ms
+: \(\vee_{9}S^{3}\)
+:END:
+
+*** 41849
+
+#+begin_src jupyter-python
+g = graphs[41849]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[114c0130d1799715370a5ba666c51ac7db5945bb]:
+[[file:./.ob-jupyter/6baa52782575d675584ec82b483e57d5a77fd25c.png]]
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS:
+: \(\vee_{3}S^{1}\vee \vee_{3}S^{2}\)
+
+#+begin_src jupyter-python
+kg = p(k(g))
+kg.order()
+#+end_src
+
+#+RESULTS:
+: 21
+
+#+begin_src jupyter-python :results scalar
+betti_numbers(nx.convert_node_labels_to_integers(kg))
+#+end_src
+
+#+RESULTS:
+: [0, 3, 0, 9]
+
+#+begin_src jupyter-python
+c_v = find_special_cutpoint(g)
+c_v
+#+end_src
+
+#+RESULTS:
+: 2
+
+#+begin_src jupyter-python
+h_graph = g.subgraph(set(g.nodes())-{2})
+kh = k(h_graph)
+nx.draw(kh, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/80ae0886c44e5c37c767c19fec815c07b3f3a45b.png]]
+
+#+begin_src jupyter-python
+u = Clique({0,5})
+nx.draw(open_neighborhood(kh, u), with_labels=True)
+#+end_src
+
+#+RESULTS[247dba5f577c31a121a13b09f333c72e3e683776]:
+[[file:./.ob-jupyter/002ec7644d70f0ae633bde42b811394dcac67f26.png]]
+
+#+begin_src jupyter-python
+h2_graph = kh.subgraph(set(kh.nodes())-{u})
+nx.draw(h2_graph, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/85ce5392389fab3f8b9f761b50b5178fb1afa730.png]]
+
+#+begin_src jupyter-python
+%time homotopy_type(h2_graph)
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: CPU times: user 44.9 ms, sys: 412 µs, total: 45.3 ms
+: Wall time: 44.4 ms
+: \(\vee_{9}S^{3}\)
+:END:
+
+*** 49151
+
+#+begin_src jupyter-python
+g = graphs[49151]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[ea9a05ee4da9383582111ca901061ab4679868a0]:
+[[file:./.ob-jupyter/485e4fbafd5b829534bc92fcd611d6b92263513b.png]]
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS:
+: \(\vee_{2}S^{1}\vee \vee_{3}S^{2}\)
+
+#+begin_src jupyter-python
+kg = p(k(g))
+kg.order()
+#+end_src
+
+#+RESULTS[77f867acb9b7426eb13c0ac87a7435acaa671ec3]:
+: 20
+
+#+begin_src jupyter-python :results scalar
+betti_numbers(nx.convert_node_labels_to_integers(kg))
+#+end_src
+
+#+RESULTS[a1726846ab78a7166ec8e225d9374c322c6026c3]:
+: [0, 2, 0, 7]
+
+#+begin_src jupyter-python
+c_v = find_special_cutpoint(g)
+c_v
+#+end_src
+
+#+RESULTS:
+: 3
+
+#+begin_src jupyter-python
+h_graph = g.subgraph(set(g.nodes())-{3})
+kh = k(h_graph)
+nx.draw(kh, with_labels=True)
+#+end_src
+
+#+RESULTS[05a3ccf8359f7db8d093128b9d7972eb444ae21d]:
+[[file:./.ob-jupyter/af480538955d261ca9096c05d49876c64ba95a1d.png]]
+
+#+begin_src jupyter-python
+homotopy_type(kh)
+#+end_src
+
+#+RESULTS[521d754155f212e59d766c6319de8d8b1b010c77]:
+: \(S^{1}\vee \vee_{7}S^{3}\)
+
+
+#+begin_src jupyter-python
+u = Clique({4,9})
+nx.draw(open_neighborhood(kh, u), with_labels=True)
+#+end_src
+
+#+RESULTS[00371e6158d8ea50bd27f01bf714950dfd3951bd]:
+[[file:./.ob-jupyter/23df514ca7fdaaf0d076f23a3d4b08956a6b16ab.png]]
+
+#+begin_src jupyter-python
+h2_graph = kh.subgraph(set(kh.nodes())-{u})
+nx.draw(h2_graph, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/bda7d76832b25a2cb395b109b7501907e86d9183.png]]
+
+#+begin_src jupyter-python
+%time homotopy_type(h2_graph)
+#+end_src
+
+#+RESULTS[edbe8985a6f591376e308ae1329b1dfc0765eb54]:
+:RESULTS:
+: CPU times: user 46.3 ms, sys: 1.66 ms, total: 47.9 ms
+: Wall time: 46.7 ms
+: \(\vee_{9}S^{3}\)
+:END:
+
+
+** file 35
+
+#+begin_src jupyter-python
+graphs = nx.read_graph6("./data/graph10c035.g6")
+len(graphs)
+#+end_src
+
+#+RESULTS[f7e4b70a6afee285c68b37799a88d28b91ddafc0]:
+: 100000
+
+*** 82636
+
+#+begin_src jupyter-python
+g = graphs[82636]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[8c5876fb2bd28ece850123d6ef1da730507fd1a7]:
+[[file:./.ob-jupyter/8e75cf52de14104e5a4f6811c26f9874e82a94cb.png]]
+
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS:
+: \(\vee_{5}S^{1}\)
+
+
+#+begin_src jupyter-python :results scalar
+kg = k(g)
+kg.order()
+#+end_src
+
+#+RESULTS:
+: 13
+
+#+begin_src jupyter-python
+homotopy_type(kg)
+#+end_src
+
+#+RESULTS[fbf2f7611a53e0e90798d306174f418b8531b3e5]:
+: \(\vee_{5}S^{1}\)
+
+#+begin_src jupyter-python
+is_clique_helly(g)
+#+end_src
+
+#+RESULTS[25b59f4fd4275efb7ff1f1ec2c69970b8208da7e]:
+: True
+
+
+
+** file 55
+
+#+begin_src jupyter-python
+graphs = nx.read_graph6("./data/graph10c055.g6")
+len(graphs)
+#+end_src
+
+#+RESULTS[edb186c4eabe11e1f58844a4469f85f52950883d]:
+: 100000
+
+*** 72330
+
+#+begin_src jupyter-python
+g = graphs[72330]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[e72df4edfa21b46a6ab928aeea05f4762cdce169]:
+[[file:./.ob-jupyter/9b0e6f4b2859911c6abaae843b71188843f6cb76.png]]
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS:
+: \(S^{1}\vee \vee_{3}S^{2}\)
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(g), with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/7bf1c7d860ea600d715a0338e86ad60a27a8cf28.png]]
+
+#+begin_src jupyter-python
+kg = k(g)
+kg.order()
+#+end_src
+
+#+RESULTS[59755e62105ba8e6b8505f94d21109ffd85c24ba]:
+: 20
+
+#+begin_src jupyter-python
+homotopy_type(kg)
+#+end_src
+
+#+RESULTS[fbf2f7611a53e0e90798d306174f418b8531b3e5]:
+: \(S^{1}\vee S^{2}\vee \vee_{2}S^{3}\)
+
+#+begin_src jupyter-python :results scalar
+betti_numbers(nx.convert_node_labels_to_integers(kg))
+#+end_src
+
+#+RESULTS[a1726846ab78a7166ec8e225d9374c322c6026c3]:
+: [0, 1, 1, 2]
+
+
+#+begin_src jupyter-python
+c_v = find_special_cutpoint(g)
+c_v
+#+end_src
+
+#+RESULTS:
+: 4
+
+#+begin_src jupyter-python
+h_graph = g.subgraph(set(g.nodes())-{4})
+kh = k(h_graph)
+nx.draw(kh, with_labels=True)
+#+end_src
+
+#+RESULTS[70337cca21e6712f81f58f4264369dcba88157f5]:
+[[file:./.ob-jupyter/946da2f3336b0b42bc45262aac07309dc4410295.png]]
+
+#+begin_src jupyter-python
+h_type_by_special_neigh(kh)
+#+end_src
+
+#+RESULTS:
+: False
+
+#+begin_src jupyter-python :results scalar
+betti_numbers(nx.convert_node_labels_to_integers(kh))
+#+end_src
+
+#+RESULTS[61b3999f0ae5711d79ca68d0a8e273d86e789fa4]:
+: [0, 0, 1, 2]
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(kh), with_labels=True)
+#+end_src
+
+#+RESULTS[d4983db439c31e201bf3d28762a2e4fcbcbe5269]:
+[[file:./.ob-jupyter/2bfef8eb09603e0555555a163e8f9a0bc3b3f6d2.png]]
+
+#+begin_src jupyter-python :results scalar
+graph=kh
+graph = nx.convert_node_labels_to_integers(graph)
+c_graph = nx.complement(graph)
+verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
+verts
+#+end_src
+
+#+RESULTS[a4738238725b540172f856c4ef826f1c88324cd3]:
+: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+
+#+begin_src jupyter-python
+vertex=0
+IG = clique_complex(graph)
+ST = star(IG, vertex)
+SC = star_cluster(IG, c_graph[vertex])
+ST, SC
+#+end_src
+
+#+RESULTS:
+: '(Simplicial complex with vertex_set (0  1  2  3  4  5  6  7  8  9  10  11  12) and facets ((0  9  10  11  12)  (0  1  2  3  4  5  6  7  8)  (0  1  2  4  10)  (0  1  2  3  9)  (0  10  12  4)  (0  1  2  9  10  11)  (0  9  3  12)  (0  3  4  5  6  12)  (0  1  2  7  8  11)). 
+:  Simplicial complex with vertex_set (1  2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17) and facets ((3  4  5  6  7  14)  (3  4  5  6  8  15)  (17  6  14  7)  (9  10  11  12  13  14  15  16  17)  (16  17  2  9  10  11)  (4  10  12  13  14  15)  (8  16  5  15)  (1  3  13  9)  (8  17  6  15)  (16  17  7  11  14)  (1  10  4  13)  (16  5  12  13  14  15)  (16  17  8  11  15)  (17  6  12  13  14  15)  (16  2  5  7  8)  (16  17  2  7  8  11)  (3  4  5  6  12  13  14  15)  (17  2  6  7  8)  (3  9  12  13  14  15)  (1  3  4  5  6  13)  (1  9  10  11  13)  (16  5  14  7)).)
+
+#+begin_src jupyter-python
+int_c = intersection_complex(ST, SC)
+int_c
+#+end_src
+
+#+RESULTS:
+: Simplicial complex with vertex_set {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12} and facets {{11, 9, 2, 10}, {3, 4, 5, 6, 12}, {3, 4, 5, 6, 8}, {8, 2, 6, 7}, {1, 3, 9}, {9, 10, 11, 12}, {3, 4, 5, 6, 7}, {9, 3, 12}, {8, 2, 5, 7}, {10, 4, 12}, {8, 2, 11, 7}, {1, 10, 11, 9}, {1, 10, 4}, {1, 3, 4, 5, 6}}.
+
+#+begin_src jupyter-python
+csc = collapse(int_c)
+csc
+#+end_src
+
+#+RESULTS:
+: Simplicial complex with vertex_set {1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12} and facets {{8, 11}, {1, 3, 6}, {8, 5, 6}, {8, 5, 7}, {3, 12, 6}, {1, 3, 9}, {8, 6, 7}, {1, 10, 9}, {9, 10, 12}, {9, 11}, {5, 6, 7}, {9, 3, 12}, {4, 12, 6}, {10, 4, 12}, {1, 10, 4}, {1, 4, 6}}.
+
+#+begin_src jupyter-python
+%time is_vertex_decomposable(csc)
+#+end_src
+
+#+RESULTS[b84eba05557e3a724a3d80c738f2bf53e2c72f1c]:
+:RESULTS:
+: CPU times: user 820 ms, sys: 0 ns, total: 820 ms
+: Wall time: 818 ms
+: False
+:END:
+
+#+begin_src jupyter-python :results scalar
+betti_numbers_c(csc)
+#+end_src
+
+#+RESULTS[ee4037d4f65fb31beb9a5c1c562d899123df3c1d]:
+: [0, 1, 2]
+
+#+begin_src jupyter-python
+csc2 = csc.deletion(11)
+csc2
+#+end_src
+
+#+RESULTS:
+: Simplicial complex with vertex_set {1, 3, 4, 5, 6, 7, 8, 9, 10, 12} and facets {{1, 3, 6}, {8, 5, 6}, {8, 5, 7}, {3, 12, 6}, {1, 3, 9}, {8, 6, 7}, {1, 10, 9}, {9, 10, 12}, {5, 6, 7}, {9, 3, 12}, {4, 12, 6}, {10, 4, 12}, {1, 10, 4}, {1, 4, 6}}.
+
+#+begin_src jupyter-python
+is_vertex_decomposable(csc2)
+#+end_src
+
+#+RESULTS:
+: False
+
+#+begin_src jupyter-python :results scalar
+csc2.dong_matching()
+#+end_src
+
+#+RESULTS[5a4b0c3d236b7952ba5cba5d513de5fa64c45888]:
+: {{8, 6, 7}, {9, 10, 12}}
+
+*** 72516
+
+#+begin_src jupyter-python
+g = graphs[72516]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/910f66c98b385d3d047674177de42c1f37a12860.png]]
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS[0a65031658d1b0a0ed4adf3237d00928c254e21c]:
+: \(\vee_{4}S^{2}\)
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(g), with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/bb372d0b7eea400927f69749b4766f8f9552e70c.png]]
+
+
+** file 65
+
+#+begin_src jupyter-python
+graphs = nx.read_graph6("./data/graph10c065.g6")
+len(graphs)
+#+end_src
+
+#+RESULTS[e33780d824681eaf8318bfdc5a9b028a9bd4b977]:
+: 100000
+
+#+begin_src jupyter-python
+g = graphs[85534]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/b9baf4f6660ce5227f7e50c1f0a6fe1404a94aac.png]]
+
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS[0a65031658d1b0a0ed4adf3237d00928c254e21c]:
+: \(\vee_{3}S^{2}\)
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(g), with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/fed01ca8bbcbfad66b974b668eac1c50a823cda7.png]]
+
+
+#+begin_src jupyter-python
+kg = k(g)
+kg.order()
+#+end_src
+
+#+RESULTS:
+: 20
+
+#+begin_src jupyter-python
+%time homotopy_type(kg)
+#+end_src
+
+#+RESULTS[f1dadd0ddfb692dd1fb30b5c00423eba6e177baf]:
+:RESULTS:
+: CPU times: user 3min 50s, sys: 12.7 ms, total: 3min 50s
+: Wall time: 3min 50s
+: \(S^{2}\vee \vee_{2}S^{3}\)
+:END:
+
+#+begin_src jupyter-python
+c_v = find_special_cutpoint(g)
+c_v
+#+end_src
+
+#+RESULTS:
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(kg), with_labels=True)
+#+end_src
+
+#+RESULTS[e2e989d14cf8f110ee33a8a52036b6f910f71f10]:
+[[file:./.ob-jupyter/f40fa56635216e9c5bc253c64a7c22ef48f73a10.png]]
+
+#+begin_src jupyter-python :results scalar
+graph = kg
+graph = nx.convert_node_labels_to_integers(graph)
+c_graph = nx.complement(graph)
+verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
+verts
+#+end_src
+
+#+RESULTS[b1813d3ca52e93bf6fd1477d7e900a1fd5867203]:
+: [6, 19]
+
+#+begin_src jupyter-python
+vertex = verts[0]
+IG = clique_complex(graph)
+ST = star(IG, vertex)
+SC = star_cluster(IG, c_graph[vertex])
+int_c = intersection_complex(ST, SC)
+csc = collapse(int_c)
+csc
+#+end_src
+
+#+RESULTS[97f86fd2577bfb1d192e30a1d45ca10375913cb7]:
+: Simplicial complex with vertex_set {0, 1, 2, 3, 4, 5, 7, 8, 11, 12, 16, 17, 18, 19} and facets {{8, 2, 11}, {0, 17, 4}, {16, 11}, {0, 17, 5}, {8, 1, 2}, {1, 2, 3}, {2, 3, 7}, {1, 18, 4}, {8, 11, 12}, {11, 12, 7}, {0, 1, 4}, {17, 18, 4}, {8, 3, 12}, {19, 4}, {8, 1, 3}, {17, 18, 5}, {1, 18, 5}, {16, 19}, {3, 12, 7}, {0, 1, 5}, {2, 11, 7}}.
+
+
+#+begin_src jupyter-python :results scalar
+csc2 = csc.deletion(19)
+csc2.dong_matching()
+#+end_src
+
+#+RESULTS[528a6511520c44a6868dddc96f4415fc0c2e3876]:
+: {{17, 18, 5}, {8, 11, 12}}
+
+** file 66
+
+#+begin_src jupyter-python
+graphs = nx.read_graph6("./data/graph10c066.g6")
+len(graphs)
+#+end_src
+
+#+RESULTS[76d537c8cfea619e648bd1c0ce45c60cc2af6517]:
+: 100000
+
+*** 399
+
+#+begin_src jupyter-python
+g = graphs[399]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[37ce8f7a5a6b00e949a7a375dd3da6ebca03c934]:
+[[file:./.ob-jupyter/312be18eec1637931538dbab8c1ba60b4e3c7104.png]]
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS[0a65031658d1b0a0ed4adf3237d00928c254e21c]:
+: \(\vee_{3}S^{2}\)
+
+#+begin_src jupyter-python :results scalar
+kg = k(g)
+kg.order(), kg.size()
+#+end_src
+
+#+RESULTS:
+: (20, 124)
+
+#+begin_src jupyter-python
+pkg = p(kg)
+pkg.order()
+#+end_src
+
+#+RESULTS[dcac00d60f7289f5fbaf68de70876427a1732889]:
+: 20
+
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(g), with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/bab2248a3cbc7df9057e24d4cba06255ef0015c4.png]]
+
+
+#+begin_src jupyter-python :results scalar
+graph = kg
+graph = nx.convert_node_labels_to_integers(graph)
+c_graph = nx.complement(graph)
+verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
+verts
+#+end_src
+
+#+RESULTS:
+: []
+
+
+#+begin_src jupyter-python :results scalar
+ckg = nx.convert_node_labels_to_integers(kg)
+ckg = simplify_ht(ckg)
+ckg.order(), ckg.size()
+#+end_src
+
+#+RESULTS:
+: (16, 66)
+
+#+begin_src jupyter-python :results scalar
+graph = ckg
+graph = nx.convert_node_labels_to_integers(graph)
+c_graph = nx.complement(graph)
+verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
+verts
+#+end_src
+
+#+RESULTS[c8c6a0eda89cba81d362b5cadbab1bf338e54fae]:
+: []
+
+#+begin_src jupyter-python
+nx.draw(ckg)
+#+end_src
+
+#+RESULTS[bb450c62797435e966a00375aa7041d2bbcfa6ff]:
+[[file:./.ob-jupyter/7ff9d9c53b3231a64094742d4a9d25bc67b62978.png]]
+
+#+begin_src jupyter-python
+h_type_by_special_edges(kg)
+#+end_src
+
+#+RESULTS[e784e0b574945ef52532cdfc67ad30d378af372f]:
+: False
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(ckg))
+#+end_src
+
+#+RESULTS[b212c3a4ff89ab1ad1c5877a0a813a07603f565b]:
+[[file:./.ob-jupyter/d19d3935d81095dc4a857bb2096c1da9731759fa.png]]
+
+
+
+#+begin_src jupyter-python
+h_type_by_special_neigh(kg)
+#+end_src
+
+#+RESULTS[00fb8862b3e6559e2fba69866ba0d0dacafae2cc]:
+: False
+
+#+begin_src jupyter-python
+h_type_by_special_neigh(ckg)
+#+end_src
+
+#+RESULTS[b01403a6f89ed897c31677a788f4afd6b22dd8d1]:
+: False
+
+#+begin_src jupyter-python
+clique_complex(ckg).dong_matching()
+#+end_src
+
+#+RESULTS[7872d9fdf3083e58f8c5af4a6e162341421db55a]:
+| 16 | 17 | 18 | 19 |
+| 16 | 18 | 12 | 13 |
+|  8 | 13 | 15 |    |
+| 16 | 17 | 19 | 14 |
+| 16 | 17 | 18 | 11 |
+
+#+begin_src jupyter-python
+is_vertex_decomposable(clique_complex(ckg))
+#+end_src
+
+#+RESULTS[ca4d14e1e91a13e5f2d5919bf3ae79b6d7e8d5f2]:
+: True
+
+#+begin_src jupyter-python
+betti_numbers(ckg)
+#+end_src
+
+#+RESULTS[71850be91e56462762c64db3e0dee04891590581]:
+| 0 | 0 | 1 | 4 |
+
+
+*** 27381
+
+#+begin_src jupyter-python
+g = graphs[27381]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[324f283630eda193461afcd4f9f088862005fd88]:
+[[file:./.ob-jupyter/a3a53d817dbdcb994c49d8d09a9b490e779336c0.png]]
+
+#+begin_src jupyter-python
+plot_neighborhoods(g)
+#+end_src
+
+#+RESULTS[243ffa5633f36445681fa803d39a9bec9dbbe20d]:
+[[file:./.ob-jupyter/a5727c41e5a28da36e3e05edca352ca98c8f8db2.png]]
+
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(g), with_labels=True)
+#+end_src
+
+#+RESULTS[dac7ea45379cb9e5d94906e8ae5b91fdc695b488]:
+[[file:./.ob-jupyter/8d96b3e9d2ed8287fffb4ad626d4db48ade6280f.png]]
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS:
+: \(\vee_{3}S^{2}\)
+
+#+begin_src jupyter-python :results scalar
+kg = k(g)
+kg.order(), kg.size()
+#+end_src
+
+#+RESULTS[6b5d363ef99d596b2eb54409586f787e392b1c2a]:
+: (21, 142)
+
+#+begin_src jupyter-python
+nx.draw(kg, with_labels=True)
+#+end_src
+
+#+RESULTS[6e26723d9a6fb88c3c21e0ed06083e108594e11a]:
+[[file:./.ob-jupyter/c1d60bfd2f8cf5cc1e1c2e8050e11c009e8c6fff.png]]
+
+#+begin_src jupyter-python :results scalar
+graph = kg
+graph = nx.convert_node_labels_to_integers(graph)
+c_graph = nx.complement(graph)
+verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
+verts
+#+end_src
+
+#+RESULTS:
+: [2, 11, 20]
+
+
+#+begin_src jupyter-python
+h_type_using_star_cluster(kg)
+#+end_src
+
+#+RESULTS[12c9449c65728141c6f781e6b24de3cf1404c79b]:
+: \(S^{2}\vee \vee_{2}S^{3}\)
+
+
+#+begin_src jupyter-python
+homotopy_type(kg)
+#+end_src
+
+
+#+begin_src jupyter-python :results scalar
+ckg = nx.convert_node_labels_to_integers(kg)
+ckg = simplify_ht(ckg)
+ckg.order(), ckg.size()
+#+end_src
+
+#+RESULTS[5a1911e0998e998bb6f2060ae6b855b2a27cfae8]:
+: (17, 58)
+
+#+begin_src jupyter-python
+nx.draw(ckg, with_labels=True)
+#+end_src
+
+#+RESULTS[c911913d8c5e512f8c50308fdf534b10a01a4b46]:
+[[file:./.ob-jupyter/7e0af8874c84694bee92e7c9cc0a47cf0a02d1ab.png]]
+
+
+
+#+begin_src jupyter-python
+h_type_by_cutpoints(ckg)
+#+end_src
+
+#+RESULTS[0ca15b6e2686985da438d1b69864a417e00d41e3]:
+: \(S^{2}\vee S^{3}\)
+
+
+#+begin_src jupyter-python :async yes
+find_cutpoints(ckg)
+#+end_src
+
+#+RESULTS[c4c26a5938a0c36e5aabf5d678a1c8e2e24e0bea]:
+:results:
+| 5 |
+:end:
+
+#+begin_src jupyter-python :results scalar
+vertex = 5
+graph = ckg
+c_graph = graph.copy()
+c_graph.remove_node(vertex)
+comps = [c.union({vertex}) for c in nx.connected_components(c_graph)]
+comps
+#+end_src
+
+#+RESULTS[f6f81d1f8046a7a517a8aaabd43882bf566f2a61]:
+: [{0, 1, 4, 5, 12, 13, 16, 17}, {5, 6, 7, 11, 14, 15, 18}]
+
+
+
+#+begin_src jupyter-python
+nx.draw(ckg, with_labels=True)
+#+end_src
+
+#+RESULTS[c911913d8c5e512f8c50308fdf534b10a01a4b46]:
+[[file:./.ob-jupyter/fdd1d94906a1963e00be25b7e09e419b16c6dc70.png]]
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(kg), with_labels=True)
+#+end_src
+
+#+RESULTS:
+[[file:./.ob-jupyter/47048fa97a98496ed1e8204ff981c2ade2689e7d.png]]
+
+#+begin_src jupyter-python
+c_v = find_special_cutpoint(g)
+c_v
+#+end_src
+
+#+RESULTS:
+
+#+begin_src jupyter-python :results scalar
+graph = kg
+graph = nx.convert_node_labels_to_integers(graph)
+c_graph = nx.complement(graph)
+verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
+verts
+#+end_src
+
+#+RESULTS:
+: [2, 7, 8, 9, 10]
+
+#+begin_src jupyter-python
+h_type_using_star_cluster(kg)
+#+end_src
+
+#+RESULTS[12c9449c65728141c6f781e6b24de3cf1404c79b]:
+: \(S^{2}\vee S^{3}\)
+
+#+begin_src jupyter-python
+h_type_by_special_neigh(kg)
+#+end_src
+
+#+RESULTS[00fb8862b3e6559e2fba69866ba0d0dacafae2cc]:
+: False
+
+#+begin_src jupyter-python :results scalar
+betti_numbers(nx.convert_node_labels_to_integers(kg))
+#+end_src
+
+#+RESULTS[a1726846ab78a7166ec8e225d9374c322c6026c3]:
+: [0, 1, 0, 2]
+
+#+begin_src jupyter-python
+plot_neighborhoods(nx.convert_node_labels_to_integers(kg))
+#+end_src
+
+#+RESULTS[d8015d41c502990d614a67f19e60a361daa0de34]:
+[[file:./.ob-jupyter/58f61e64abfaeb573081e4e779fc0e9ee87189f9.png]]
+
+#+begin_src jupyter-python :results scalar
+kg.order(), kg.size()
+#+end_src
+
+#+RESULTS[13e30c4e91fe1289132d1811993158267f59294f]:
+: (18, 101)
+
+#+begin_src jupyter-python :results scalar
+ckg = nx.convert_node_labels_to_integers(kg)
+ckg = simplify_ht(ckg)
+ckg.order(), ckg.size()
+#+end_src
+
+#+RESULTS[5a1911e0998e998bb6f2060ae6b855b2a27cfae8]:
+: (18, 60)
+
+#+begin_src jupyter-python
+plot_neighborhoods(nx.convert_node_labels_to_integers(ckg))
+#+end_src
+
+#+RESULTS[bf9a6cf863135c8f6c0cc5c7a9502210b8c67241]:
+[[file:./.ob-jupyter/5394d5b22a0ff8bfeec1738ca7a847414786fb50.png]]
+
+
+#+begin_src jupyter-python
+h_type_using_star_cluster(ckg)
+#+end_src
+
+#+RESULTS[d4ddca658c347c9173216d66679f2e72a04c39ea]:
+: False
+
+#+begin_src jupyter-python :results scalar
+graph = ckg
+graph = nx.convert_node_labels_to_integers(graph)
+c_graph = nx.complement(graph)
+verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
+verts
+#+end_src
+
+#+RESULTS[c8c6a0eda89cba81d362b5cadbab1bf338e54fae]:
+: []
+
+
+#+begin_src jupyter-python
+h_type_by_special_neigh(ckg)
+#+end_src
+
+#+RESULTS[b01403a6f89ed897c31677a788f4afd6b22dd8d1]:
+: False
+
+#+begin_src jupyter-python
+nx.draw(open_neighborhood(ckg, 15), with_labels=True)
+#+end_src
+
+#+RESULTS[987da8d2145fd6c99c27a357e0368eba7e27135b]:
+[[file:./.ob-jupyter/a36188b90adb7536935b0be1e11fa65524e20a7f.png]]
+
+
+#+begin_src jupyter-python
+cs = collapse(clique_complex(ckg))
+cs
+#+end_src
+
+#+RESULTS:
+: Simplicial complex with vertex_set {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17} and facets {{10, 11, 14, 15}, {17, 10, 11, 14}, {11, 17, 2, 3}, {8, 1, 4, 16}, {0, 1, 5, 9}, {13, 5, 12, 4}, {3, 7, 6, 15}, {0, 5, 12, 4}, {17, 2, 3, 6}, {11, 10, 3, 15}, {11, 3, 7, 15}, {16, 17}, {8, 1, 13, 9}, {8, 1, 4, 13}, {2, 6, 14, 7}, {8, 9, 12, 13}, {0, 16, 12, 4}, {17, 10, 6, 14}, {0, 9, 12, 16}, {11, 17, 10, 3}, {0, 1, 4, 16}, {9, 5, 12, 13}, {0, 1, 4, 5}, {8, 1, 9, 16}, {11, 2, 3, 7}, {8, 9, 12, 16}, {13, 15}, {1, 5, 4, 13}, {1, 5, 13, 9}, {8, 16, 12, 4}, {10, 15, 6, 14}, {8, 13, 12, 4}, {15, 7, 6, 14}, {17, 10, 3, 6}, {0, 1, 9, 16}, {10, 3, 6, 15}, {17, 2, 11, 14}, {11, 15, 14, 7}, {2, 3, 6, 7}, {0, 9, 12, 5}, {2, 11, 14, 7}, {17, 2, 14, 6}}.
+
+#+begin_src jupyter-python
+cs.is_clique_complex()
+#+end_src
+
+#+RESULTS[14cf65f0a20cabeaa2cc6aac59fb3d105ce2c735]:
+: True
+
+#+begin_src jupyter-python
+nx.is_isomorphic(cs.one_skeleton_graph(), ckg)
+#+end_src
+
+#+RESULTS[8dea93180d5e64ac928ff4190877b9e000e3fe43]:
+: True
+
+#+begin_src jupyter-python
+nx.draw(ckg, with_labels=True)
+#+end_src
+
+#+RESULTS[c911913d8c5e512f8c50308fdf534b10a01a4b46]:
+[[file:./.ob-jupyter/c2c262946f8609bdd8ac9a2fd2f46ce308965ee0.png]]
+
+
+#+begin_src jupyter-python
+h_type_by_special_edges(ckg)
+#+end_src
+
+#+RESULTS[06675e1443ee3a3ebbb3d0c2c809d9b93e984a19]:
+: \(S^{1}\vee \vee_{2}S^{3}\)
+
+
+#+begin_src jupyter-python :results scalar
+[f for f in clique_complex(ckg).facet_set if len(f)==2]
+#+end_src
+
+#+RESULTS[7dc6088be2d4a86f8874e8971955b16816966a45]:
+: [{16, 17}, {13, 15}]
+
+#+begin_src jupyter-python :results scalar
+find_special_edges(ckg)
+#+end_src
+
+#+RESULTS[291f568263b38c7e90ea83483624d338c45cc126]:
+: [(13, 15), (16, 17)]
+
+#+begin_src jupyter-python
+cckg = ckg.copy()
+cckg.remove_edges_from([(13, 15), (16, 17)])
+ckg.size(), cckg.size()
+#+end_src
+
+#+RESULTS[13afd6a96d6970d8fb1339d9d3f5f0231b595576]:
+| 60 | 58 |
+
+#+begin_src jupyter-python :results scalar
+[cckg.subgraph(c) for c in nx.connected_components(cckg)]
+#+end_src
+
+#+RESULTS[31404cc8384d01f18ab51192f057ec0108ab92b7]:
+: [<networkx.classes.graph.Graph at 0x7f8f4878ed90>,
+:  <networkx.classes.graph.Graph at 0x7f8f41c19ee0>]
+
+
+
+
+#+begin_src jupyter-python :results scalar
+[{x} for x in ckg.nodes() if x not in {13,15,16,17}]
+#+end_src
+
+#+RESULTS[54c50ff0bbe561f746bd557b2e38ade189c87e73]:
+: [{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {14}]
+
+#+begin_src jupyter-python
+partition = [{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {14}]+[{16, 17}, {13, 15}]
+ckgq = nx.quotient_graph(ckg, partition, relabel=True)
+nx.draw(ckgq, with_labels=True)
+#+end_src
+
+#+RESULTS[f97239c6dc749358930ebe28c3f0d55c7a184d81]:
+[[file:./.ob-jupyter/0896abf3224699ee6653a073cd5dc632de6b0123.png]]
+
+#+begin_src jupyter-python
+homotopy_type(ckgq)
+#+end_src
+
+#+begin_src jupyter-python
+cskg = collapse(clique_complex(kg))
+cskg.is_clique_complex()
+#+end_src
+
+#+RESULTS[a1c3b81a4d1ebbb26e1bc1997fe833f6c98cfd25]:
+: False
+
+#+begin_src jupyter-python :results scalar
+[f for f in cskg.facet_set if len(f)==2]
+#+end_src
+
+#+RESULTS[8075a9d673ade061aea0fa94efdcf1ff200dac61]:
+: [{{2, 5, 7}, {0, 4, 7}}, {{2, 5, 7}, {9, 3, 5}}]
+
+
+
+#+begin_src jupyter-python
+homotopy_type(ckg)
+#+end_src
+
+#+RESULTS[469096a8f96d9a744cf894a2ca26df77d71ca87a]:
+: \(S^{2}\vee \vee_{4}S^{3}\)
+
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(ckg), with_labels=True)
+#+end_src
+
+#+RESULTS[e4201da8efe32ae30c03157741bf4a6c602637a6]:
+[[file:./.ob-jupyter/f4b407313fc2fe79155200534caef6959d9c39c0.png]]
+
+*** 28002
+
+#+begin_src jupyter-python
+g = graphs[28002]
+nx.draw(g, with_labels=True)
+#+end_src
+
+#+RESULTS[6ffa63970d42ed9bafd209664f26977588bc38a1]:
+[[file:./.ob-jupyter/573458adbe94694ab04705590a14907216beb054.png]]
+
+#+begin_src jupyter-python
+plot_neighborhoods(g)
+#+end_src
+
+#+RESULTS[243ffa5633f36445681fa803d39a9bec9dbbe20d]:
+[[file:./.ob-jupyter/4a6da00625b84a7748c2d79725460458352b693c.png]]
+
+#+begin_src jupyter-python :results scalar
+kg = k(g)
+kg.order(), kg.size()
+#+end_src
+
+#+RESULTS[6b5d363ef99d596b2eb54409586f787e392b1c2a]:
+: (23, 169)
+
+#+begin_src jupyter-python
+kg = p(kg)
+kg.order(), kg.size()
+#+end_src
+
+#+RESULTS[29423a14fb712e2122d5f94a72255f2792500836]:
+| 23 | 169 |
+
+#+begin_src jupyter-python :results scalar
+ckg = nx.convert_node_labels_to_integers(kg)
+ckg = simplify_ht(ckg)
+ckg.order(), ckg.size()
+#+end_src
+
+#+RESULTS:
+: (19, 69)
+
+#+begin_src jupyter-python
+nx.draw(nx.complement(g), with_labels=True)
+#+end_src
+
+#+RESULTS[dac7ea45379cb9e5d94906e8ae5b91fdc695b488]:
+[[file:./.ob-jupyter/f384052e8ed59bca372ed2528a71ad0fa7296251.png]]
+
+
+#+begin_src jupyter-python
+homotopy_type(g)
+#+end_src
+
+#+RESULTS:
+: \(\vee_{4}S^{2}\)
+
+#+begin_src jupyter-python
+nx.draw(kg, with_labels=True)
+#+end_src
+
+#+RESULTS[6e26723d9a6fb88c3c21e0ed06083e108594e11a]:
+[[file:./.ob-jupyter/5c021ece664b3e8e3b296173691f4c69f285f991.png]]
+
+#+begin_src jupyter-python
+nx.draw(ckg, with_labels=True)
+#+end_src
+
+#+RESULTS[c911913d8c5e512f8c50308fdf534b10a01a4b46]:
+[[file:./.ob-jupyter/390d1f7a852abea3a02873359e3e91fb9bbe4de4.png]]
+
+#+begin_src jupyter-python
+plot_neighborhoods(ckg)
+#+end_src
+
+#+RESULTS[9df4019ef47d047156d11366e8f427095fbd12e2]:
+:RESULTS:
+# [goto error]
+#+begin_example
+[0;31m[0m
+[0;31mKeyError[0mTraceback (most recent call last)
+[0;32m<ipython-input-23-652907fca1d3>[0m in [0;36m<module>[0;34m[0m
+[0;32m----> 1[0;31m [0mplot_neighborhoods[0m[0;34m([0m[0mckg[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m
+[0;32m<ipython-input-2-f037bb5bfcab>[0m in [0;36mplot_neighborhoods[0;34m(g)[0m
+[1;32m     28[0m         [0mplt[0m[0;34m.[0m[0msubplot[0m[0;34m([0m[0mrows[0m[0;34m,[0m [0mcolumns[0m[0;34m,[0m [0mi[0m[0;34m+[0m[0;36m1[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     29[0m         [0mplt[0m[0;34m.[0m[0mtitle[0m[0;34m([0m[0mi[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 30[0;31m         [0mnx[0m[0;34m.[0m[0mdraw[0m[0;34m([0m[0mopen_neighborhood[0m[0;34m([0m[0mg[0m[0;34m,[0m [0mi[0m[0;34m)[0m[0;34m,[0m [0mnode_size[0m[0;34m=[0m[0;36m200[0m[0;34m,[0m [0mwith_labels[0m[0;34m=[0m[0;34m'True'[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     31[0m     [0mplt[0m[0;34m.[0m[0mshow[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/Python/pycliques-dev/pycliques/src/pycliques/surfaces.py[0m in [0;36mopen_neighborhood[0;34m(graph, v)[0m
+[1;32m     21[0m [0;32mdef[0m [0mopen_neighborhood[0m[0;34m([0m[0mgraph[0m[0;34m,[0m [0mv[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     22[0m     [0;34m"""Return a copy(), otherwise the subgraph is frozen."""[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 23[0;31m     [0;32mreturn[0m [0mgraph[0m[0;34m.[0m[0msubgraph[0m[0;34m([0m[0mgraph[0m[0;34m[[0m[0mv[0m[0;34m][0m[0;34m)[0m[0;34m.[0m[0mcopy[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     24[0m [0;34m[0m[0m
+[1;32m     25[0m [0;34m[0m[0m
+
+[0;32m~/Python/pycliques-dev/lib/python3.9/site-packages/networkx/classes/graph.py[0m in [0;36m__getitem__[0;34m(self, n)[0m
+[1;32m    511[0m         [0mAtlasView[0m[0;34m([0m[0;34m{[0m[0;36m1[0m[0;34m:[0m [0;34m{[0m[0;34m}[0m[0;34m}[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    512[0m         """
+[0;32m--> 513[0;31m         [0;32mreturn[0m [0mself[0m[0;34m.[0m[0madj[0m[0;34m[[0m[0mn[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    514[0m [0;34m[0m[0m
+[1;32m    515[0m     [0;32mdef[0m [0madd_node[0m[0;34m([0m[0mself[0m[0;34m,[0m [0mnode_for_adding[0m[0;34m,[0m [0;34m**[0m[0mattr[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/Python/pycliques-dev/lib/python3.9/site-packages/networkx/classes/coreviews.py[0m in [0;36m__getitem__[0;34m(self, name)[0m
+[1;32m     79[0m [0;34m[0m[0m
+[1;32m     80[0m     [0;32mdef[0m [0m__getitem__[0m[0;34m([0m[0mself[0m[0;34m,[0m [0mname[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 81[0;31m         [0;32mreturn[0m [0mAtlasView[0m[0;34m([0m[0mself[0m[0;34m.[0m[0m_atlas[0m[0;34m[[0m[0mname[0m[0;34m][0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     82[0m [0;34m[0m[0m
+[1;32m     83[0m     [0;32mdef[0m [0mcopy[0m[0;34m([0m[0mself[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;31mKeyError[0m: 6
+#+end_example
+[[file:./.ob-jupyter/30a690d7d1646552be4909f42f38a5f098559b64.png]]
+:END:
+
+#+begin_src jupyter-python
+c_v = find_special_cutpoint(g)
+c_v
+#+end_src
+
+#+RESULTS:
+
+#+begin_src jupyter-python :results scalar
+graph = kg
+graph = nx.convert_node_labels_to_integers(graph)
+c_graph = nx.complement(graph)
+verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
+verts
+#+end_src
+
+#+RESULTS:
+: [6, 13, 20]
+
+#+begin_src jupyter-python
+h_type_using_star_cluster(kg)
+#+end_src
+
+#+RESULTS:
+: \(\vee_{2}S^{2}\vee \vee_{2}S^{3}\)
+
+#+begin_src jupyter-python :results scalar
+graph = ckg
+graph = nx.convert_node_labels_to_integers(graph)
+c_graph = nx.complement(graph)
+verts = [i for i in c_graph.nodes() if open_neighborhood(c_graph, i).size() == 0]
+verts
+#+end_src
+
+#+RESULTS[c8c6a0eda89cba81d362b5cadbab1bf338e54fae]:
+: []
 
 * 9 vertices
 
@@ -417,144 +2276,12 @@ pg.order()
 h_type_clique_graph_cutpoint(g, 1)
 #+end_src
 
-#+RESULTS[23e4cb3ebb784e10881ff61fe2a7d20146f8911f]:
-:RESULTS:
-# [goto error]
-#+begin_example
-[0;31m[0m
-[0;31mNetworkXError[0mTraceback (most recent call last)
-[0;32m<ipython-input-7-097b7aa1f8cf>[0m in [0;36m<module>[0;34m[0m
-[0;32m----> 1[0;31m [0mh_type_clique_graph_cutpoint[0m[0;34m([0m[0mg[0m[0;34m,[0m [0;36m1[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36mh_type_clique_graph_cutpoint[0;34m(graph, vertex)[0m
-[1;32m    233[0m     [0;34m"""Returns the homotopy type of the clique graph of graph with a special cutpoint"""[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    234[0m     [0mh_graph[0m [0;34m=[0m [0mgraph[0m[0;34m.[0m[0msubgraph[0m[0;34m([0m[0mset[0m[0;34m([0m[0mgraph[0m[0;34m.[0m[0mnodes[0m[0;34m([0m[0;34m)[0m[0;34m)[0m[0;34m-[0m[0;34m{[0m[0mvertex[0m[0;34m}[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 235[0;31m     [0mk_h_type[0m [0;34m=[0m [0mhomotopy_type[0m[0;34m([0m[0mk[0m[0;34m([0m[0mh_graph[0m[0;34m)[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    236[0m     [0ms_neigh[0m [0;34m=[0m [0mopen_neighborhood[0m[0;34m([0m[0mgraph[0m[0;34m,[0m [0mvertex[0m[0;34m)[0m[0;34m.[0m[0morder[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    237[0m     [0;32mif[0m [0mk_h_type[0m [0;34m==[0m [0;34m"Contractible"[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36mhomotopy_type[0;34m(graph)[0m
-[1;32m     79[0m     [0;32mif[0m [0mstar_c[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     80[0m         [0;32mreturn[0m [0mstar_c[0m[0;34m[0m[0;34m[0m[0m
-[0;32m---> 81[0;31m     [0mspec_n[0m [0;34m=[0m [0mh_type_by_special_neigh[0m[0;34m([0m[0mgraph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m     82[0m     [0;32mif[0m [0mspec_n[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     83[0m         [0;32mreturn[0m [0mspec_n[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36mh_type_by_special_neigh[0;34m(graph)[0m
-[1;32m    370[0m         [0mv[0m [0;34m=[0m [0mfilt[0m[0;34m[[0m[0;36m0[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
-[1;32m    371[0m         [0mh[0m [0;34m=[0m [0mgraph[0m[0;34m.[0m[0msubgraph[0m[0;34m([0m[0mset[0m[0;34m([0m[0mgraph[0m[0;34m.[0m[0mnodes[0m[0;34m([0m[0;34m)[0m[0;34m)[0m[0;34m-[0m[0;34m{[0m[0mv[0m[0;34m}[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 372[0;31m         [0mh_type[0m [0;34m=[0m [0mhomotopy_type[0m[0;34m([0m[0mh[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    373[0m         [0;32mif[0m [0mh_type[0m [0;34m==[0m [0;34m"Contractible"[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    374[0m             [0;32mreturn[0m [0;34m"\\(S^{1}\\)"[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36mhomotopy_type[0;34m(graph)[0m
-[1;32m     85[0m     [0;32mif[0m [0m_read_dong[0m[0;34m([0m[0mdong1[0m[0;34m)[0m[0;34m[[0m[0;36m0[0m[0;34m][0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     86[0m         [0;32mreturn[0m [0m_read_dong[0m[0;34m([0m[0mdong1[0m[0;34m)[0m[0;34m[[0m[0;36m1[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
-[0;32m---> 87[0;31m     [0ms_ht[0m [0;34m=[0m [0mnx[0m[0;34m.[0m[0mconvert_node_labels_to_integers[0m[0;34m([0m[0msimplify_ht[0m[0;34m([0m[0mgraph[0m[0;34m)[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m     88[0m     [0mc_complex2[0m [0;34m=[0m [0mclique_complex[0m[0;34m([0m[0ms_ht[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     89[0m     [0mdong2[0m [0;34m=[0m [0mc_complex2[0m[0;34m.[0m[0mdong_matching[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36msimplify_ht[0;34m(graph)[0m
-[1;32m     27[0m     [0;34m"""Simplifies the graph for homotopy type purposes"""[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     28[0m     [0mv_graph[0m [0;34m=[0m [0mcomplete_s_collapse[0m[0;34m([0m[0mgraph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m---> 29[0;31m     [0mev_graph[0m [0;34m=[0m [0mcomplete_s_collapse_edges[0m[0;34m([0m[0mv_graph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m     30[0m     [0mvev_graph[0m [0;34m=[0m [0mcomplete_s_collapse[0m[0;34m([0m[0mev_graph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     31[0m     [0;32mreturn[0m [0mvev_graph[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/pycliques/src/pycliques/dominated.py[0m in [0;36mcomplete_s_collapse_edges[0;34m(graph)[0m
-[1;32m    435[0m     [0;32mwhile[0m [0;32mTrue[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    436[0m         [0mn[0m [0;34m=[0m [0mgraph_aux[0m[0;34m.[0m[0msize[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 437[0;31m         [0mgraph_aux[0m [0;34m=[0m [0mremove_s_dismantlable_edge[0m[0;34m([0m[0mgraph_aux[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    438[0m         [0;32mif[0m [0mn[0m [0;34m==[0m [0mgraph_aux[0m[0;34m.[0m[0msize[0m[0;34m([0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    439[0m             [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/pycliques/src/pycliques/dominated.py[0m in [0;36mremove_s_dismantlable_edge[0;34m(graph)[0m
-[1;32m    411[0m         [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    412[0m     [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 413[0;31m         [0mgraph_aux[0m[0;34m.[0m[0mremove_edge[0m[0;34m([0m[0;34m*[0m[0mx[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    414[0m         [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    415[0m [0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/lib/python3.9/site-packages/networkx/classes/function.py[0m in [0;36mfrozen[0;34m(*args, **kwargs)[0m
-[1;32m    154[0m [0;32mdef[0m [0mfrozen[0m[0;34m([0m[0;34m*[0m[0margs[0m[0;34m,[0m [0;34m**[0m[0mkwargs[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    155[0m     [0;34m"""Dummy method for raising errors when trying to modify frozen graphs"""[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 156[0;31m     [0;32mraise[0m [0mnx[0m[0;34m.[0m[0mNetworkXError[0m[0;34m([0m[0;34m"Frozen graph can't be modified"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    157[0m [0;34m[0m[0m
-[1;32m    158[0m [0;34m[0m[0m
-
-[0;31mNetworkXError[0m: Frozen graph can't be modified
-#+end_example
-:END:
 
 #+begin_src jupyter-python
 h_graph = g.subgraph(set(g.nodes())-{1})
 kh = k(h_graph)
 k_h_type = homotopy_type(kh)
 #+end_src
-
-#+RESULTS[98543ad635b80a56120ea7bcf74af7bad9ebbbeb]:
-:RESULTS:
-# [goto error]
-#+begin_example
-[0;31m[0m
-[0;31mNetworkXError[0mTraceback (most recent call last)
-[0;32m<ipython-input-26-f19f3aefabe7>[0m in [0;36m<module>[0;34m[0m
-[1;32m      1[0m [0mh_graph[0m [0;34m=[0m [0mg[0m[0;34m.[0m[0msubgraph[0m[0;34m([0m[0mset[0m[0;34m([0m[0mg[0m[0;34m.[0m[0mnodes[0m[0;34m([0m[0;34m)[0m[0;34m)[0m[0;34m-[0m[0;34m{[0m[0;36m1[0m[0;34m}[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m      2[0m [0mkh[0m [0;34m=[0m [0mk[0m[0;34m([0m[0mh_graph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m----> 3[0;31m [0mk_h_type[0m [0;34m=[0m [0mhomotopy_type[0m[0;34m([0m[0mkh[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36mhomotopy_type[0;34m(graph)[0m
-[1;32m     79[0m     [0;32mif[0m [0mstar_c[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     80[0m         [0;32mreturn[0m [0mstar_c[0m[0;34m[0m[0;34m[0m[0m
-[0;32m---> 81[0;31m     [0mspec_n[0m [0;34m=[0m [0mh_type_by_special_neigh[0m[0;34m([0m[0mgraph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m     82[0m     [0;32mif[0m [0mspec_n[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     83[0m         [0;32mreturn[0m [0mspec_n[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36mh_type_by_special_neigh[0;34m(graph)[0m
-[1;32m    370[0m         [0mv[0m [0;34m=[0m [0mfilt[0m[0;34m[[0m[0;36m0[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
-[1;32m    371[0m         [0mh[0m [0;34m=[0m [0mgraph[0m[0;34m.[0m[0msubgraph[0m[0;34m([0m[0mset[0m[0;34m([0m[0mgraph[0m[0;34m.[0m[0mnodes[0m[0;34m([0m[0;34m)[0m[0;34m)[0m[0;34m-[0m[0;34m{[0m[0mv[0m[0;34m}[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 372[0;31m         [0mh_type[0m [0;34m=[0m [0mhomotopy_type[0m[0;34m([0m[0mh[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    373[0m         [0;32mif[0m [0mh_type[0m [0;34m==[0m [0;34m"Contractible"[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    374[0m             [0;32mreturn[0m [0;34m"\\(S^{1}\\)"[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36mhomotopy_type[0;34m(graph)[0m
-[1;32m     85[0m     [0;32mif[0m [0m_read_dong[0m[0;34m([0m[0mdong1[0m[0;34m)[0m[0;34m[[0m[0;36m0[0m[0;34m][0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     86[0m         [0;32mreturn[0m [0m_read_dong[0m[0;34m([0m[0mdong1[0m[0;34m)[0m[0;34m[[0m[0;36m1[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
-[0;32m---> 87[0;31m     [0ms_ht[0m [0;34m=[0m [0mnx[0m[0;34m.[0m[0mconvert_node_labels_to_integers[0m[0;34m([0m[0msimplify_ht[0m[0;34m([0m[0mgraph[0m[0;34m)[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m     88[0m     [0mc_complex2[0m [0;34m=[0m [0mclique_complex[0m[0;34m([0m[0ms_ht[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     89[0m     [0mdong2[0m [0;34m=[0m [0mc_complex2[0m[0;34m.[0m[0mdong_matching[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36msimplify_ht[0;34m(graph)[0m
-[1;32m     27[0m     [0;34m"""Simplifies the graph for homotopy type purposes"""[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     28[0m     [0mv_graph[0m [0;34m=[0m [0mcomplete_s_collapse[0m[0;34m([0m[0mgraph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m---> 29[0;31m     [0mev_graph[0m [0;34m=[0m [0mcomplete_s_collapse_edges[0m[0;34m([0m[0mv_graph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m     30[0m     [0mvev_graph[0m [0;34m=[0m [0mcomplete_s_collapse[0m[0;34m([0m[0mev_graph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     31[0m     [0;32mreturn[0m [0mvev_graph[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/pycliques/src/pycliques/dominated.py[0m in [0;36mcomplete_s_collapse_edges[0;34m(graph)[0m
-[1;32m    435[0m     [0;32mwhile[0m [0;32mTrue[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    436[0m         [0mn[0m [0;34m=[0m [0mgraph_aux[0m[0;34m.[0m[0msize[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 437[0;31m         [0mgraph_aux[0m [0;34m=[0m [0mremove_s_dismantlable_edge[0m[0;34m([0m[0mgraph_aux[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    438[0m         [0;32mif[0m [0mn[0m [0;34m==[0m [0mgraph_aux[0m[0;34m.[0m[0msize[0m[0;34m([0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    439[0m             [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/pycliques/src/pycliques/dominated.py[0m in [0;36mremove_s_dismantlable_edge[0;34m(graph)[0m
-[1;32m    411[0m         [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    412[0m     [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 413[0;31m         [0mgraph_aux[0m[0;34m.[0m[0mremove_edge[0m[0;34m([0m[0;34m*[0m[0mx[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    414[0m         [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    415[0m [0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/lib/python3.9/site-packages/networkx/classes/function.py[0m in [0;36mfrozen[0;34m(*args, **kwargs)[0m
-[1;32m    154[0m [0;32mdef[0m [0mfrozen[0m[0;34m([0m[0;34m*[0m[0margs[0m[0;34m,[0m [0;34m**[0m[0mkwargs[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    155[0m     [0;34m"""Dummy method for raising errors when trying to modify frozen graphs"""[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 156[0;31m     [0;32mraise[0m [0mnx[0m[0;34m.[0m[0mNetworkXError[0m[0;34m([0m[0;34m"Frozen graph can't be modified"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    157[0m [0;34m[0m[0m
-[1;32m    158[0m [0;34m[0m[0m
-
-[0;31mNetworkXError[0m: Frozen graph can't be modified
-#+end_example
-:END:
 
 #+begin_src jupyter-python
 nx.draw(kh, with_labels=True)
@@ -581,61 +2308,6 @@ h_type_using_star_cluster(kh)
 h_type_by_special_neigh(kh)
 #+end_src
 
-#+RESULTS:
-:RESULTS:
-# [goto error]
-#+begin_example
-[0;31m[0m
-[0;31mNetworkXError[0mTraceback (most recent call last)
-[0;32m<ipython-input-21-0beaf508216f>[0m in [0;36m<module>[0;34m[0m
-[0;32m----> 1[0;31m [0mh_type_by_special_neigh[0m[0;34m([0m[0mkh[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36mh_type_by_special_neigh[0;34m(graph)[0m
-[1;32m    370[0m         [0mv[0m [0;34m=[0m [0mfilt[0m[0;34m[[0m[0;36m0[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
-[1;32m    371[0m         [0mh[0m [0;34m=[0m [0mgraph[0m[0;34m.[0m[0msubgraph[0m[0;34m([0m[0mset[0m[0;34m([0m[0mgraph[0m[0;34m.[0m[0mnodes[0m[0;34m([0m[0;34m)[0m[0;34m)[0m[0;34m-[0m[0;34m{[0m[0mv[0m[0;34m}[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 372[0;31m         [0mh_type[0m [0;34m=[0m [0mhomotopy_type[0m[0;34m([0m[0mh[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    373[0m         [0;32mif[0m [0mh_type[0m [0;34m==[0m [0;34m"Contractible"[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    374[0m             [0;32mreturn[0m [0;34m"\\(S^{1}\\)"[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36mhomotopy_type[0;34m(graph)[0m
-[1;32m     85[0m     [0;32mif[0m [0m_read_dong[0m[0;34m([0m[0mdong1[0m[0;34m)[0m[0;34m[[0m[0;36m0[0m[0;34m][0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     86[0m         [0;32mreturn[0m [0m_read_dong[0m[0;34m([0m[0mdong1[0m[0;34m)[0m[0;34m[[0m[0;36m1[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
-[0;32m---> 87[0;31m     [0ms_ht[0m [0;34m=[0m [0mnx[0m[0;34m.[0m[0mconvert_node_labels_to_integers[0m[0;34m([0m[0msimplify_ht[0m[0;34m([0m[0mgraph[0m[0;34m)[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m     88[0m     [0mc_complex2[0m [0;34m=[0m [0mclique_complex[0m[0;34m([0m[0ms_ht[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     89[0m     [0mdong2[0m [0;34m=[0m [0mc_complex2[0m[0;34m.[0m[0mdong_matching[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36msimplify_ht[0;34m(graph)[0m
-[1;32m     27[0m     [0;34m"""Simplifies the graph for homotopy type purposes"""[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     28[0m     [0mv_graph[0m [0;34m=[0m [0mcomplete_s_collapse[0m[0;34m([0m[0mgraph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m---> 29[0;31m     [0mev_graph[0m [0;34m=[0m [0mcomplete_s_collapse_edges[0m[0;34m([0m[0mv_graph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m     30[0m     [0mvev_graph[0m [0;34m=[0m [0mcomplete_s_collapse[0m[0;34m([0m[0mev_graph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     31[0m     [0;32mreturn[0m [0mvev_graph[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/pycliques/src/pycliques/dominated.py[0m in [0;36mcomplete_s_collapse_edges[0;34m(graph)[0m
-[1;32m    435[0m     [0;32mwhile[0m [0;32mTrue[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    436[0m         [0mn[0m [0;34m=[0m [0mgraph_aux[0m[0;34m.[0m[0msize[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 437[0;31m         [0mgraph_aux[0m [0;34m=[0m [0mremove_s_dismantlable_edge[0m[0;34m([0m[0mgraph_aux[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    438[0m         [0;32mif[0m [0mn[0m [0;34m==[0m [0mgraph_aux[0m[0;34m.[0m[0msize[0m[0;34m([0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    439[0m             [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/pycliques/src/pycliques/dominated.py[0m in [0;36mremove_s_dismantlable_edge[0;34m(graph)[0m
-[1;32m    411[0m         [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    412[0m     [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 413[0;31m         [0mgraph_aux[0m[0;34m.[0m[0mremove_edge[0m[0;34m([0m[0;34m*[0m[0mx[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    414[0m         [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    415[0m [0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/lib/python3.9/site-packages/networkx/classes/function.py[0m in [0;36mfrozen[0;34m(*args, **kwargs)[0m
-[1;32m    154[0m [0;32mdef[0m [0mfrozen[0m[0;34m([0m[0;34m*[0m[0margs[0m[0;34m,[0m [0;34m**[0m[0mkwargs[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    155[0m     [0;34m"""Dummy method for raising errors when trying to modify frozen graphs"""[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 156[0;31m     [0;32mraise[0m [0mnx[0m[0;34m.[0m[0mNetworkXError[0m[0;34m([0m[0;34m"Frozen graph can't be modified"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    157[0m [0;34m[0m[0m
-[1;32m    158[0m [0;34m[0m[0m
-
-[0;31mNetworkXError[0m: Frozen graph can't be modified
-#+end_example
-:END:
-
 #+begin_src jupyter-python :results scalar
 graph = kh
 neighs = [(i, open_neighborhood(graph, i)) for i in graph.nodes()]
@@ -653,56 +2325,6 @@ sssh = graph.subgraph(set(graph.nodes())-{v})
 h_type = homotopy_type(sssh)
 #+end_src
 
-#+RESULTS:
-:RESULTS:
-# [goto error]
-#+begin_example
-[0;31m[0m
-[0;31mNetworkXError[0mTraceback (most recent call last)
-[0;32m<ipython-input-29-9d4d17a2b33b>[0m in [0;36m<module>[0;34m[0m
-[1;32m      1[0m [0mv[0m [0;34m=[0m [0mfilt[0m[0;34m[[0m[0;36m0[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
-[1;32m      2[0m [0msssh[0m [0;34m=[0m [0mgraph[0m[0;34m.[0m[0msubgraph[0m[0;34m([0m[0mset[0m[0;34m([0m[0mgraph[0m[0;34m.[0m[0mnodes[0m[0;34m([0m[0;34m)[0m[0;34m)[0m[0;34m-[0m[0;34m{[0m[0mv[0m[0;34m}[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m----> 3[0;31m [0mh_type[0m [0;34m=[0m [0mhomotopy_type[0m[0;34m([0m[0msssh[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36mhomotopy_type[0;34m(graph)[0m
-[1;32m     85[0m     [0;32mif[0m [0m_read_dong[0m[0;34m([0m[0mdong1[0m[0;34m)[0m[0;34m[[0m[0;36m0[0m[0;34m][0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     86[0m         [0;32mreturn[0m [0m_read_dong[0m[0;34m([0m[0mdong1[0m[0;34m)[0m[0;34m[[0m[0;36m1[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
-[0;32m---> 87[0;31m     [0ms_ht[0m [0;34m=[0m [0mnx[0m[0;34m.[0m[0mconvert_node_labels_to_integers[0m[0;34m([0m[0msimplify_ht[0m[0;34m([0m[0mgraph[0m[0;34m)[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m     88[0m     [0mc_complex2[0m [0;34m=[0m [0mclique_complex[0m[0;34m([0m[0ms_ht[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     89[0m     [0mdong2[0m [0;34m=[0m [0mc_complex2[0m[0;34m.[0m[0mdong_matching[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36msimplify_ht[0;34m(graph)[0m
-[1;32m     27[0m     [0;34m"""Simplifies the graph for homotopy type purposes"""[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     28[0m     [0mv_graph[0m [0;34m=[0m [0mcomplete_s_collapse[0m[0;34m([0m[0mgraph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m---> 29[0;31m     [0mev_graph[0m [0;34m=[0m [0mcomplete_s_collapse_edges[0m[0;34m([0m[0mv_graph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m     30[0m     [0mvev_graph[0m [0;34m=[0m [0mcomplete_s_collapse[0m[0;34m([0m[0mev_graph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     31[0m     [0;32mreturn[0m [0mvev_graph[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/pycliques/src/pycliques/dominated.py[0m in [0;36mcomplete_s_collapse_edges[0;34m(graph)[0m
-[1;32m    435[0m     [0;32mwhile[0m [0;32mTrue[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    436[0m         [0mn[0m [0;34m=[0m [0mgraph_aux[0m[0;34m.[0m[0msize[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 437[0;31m         [0mgraph_aux[0m [0;34m=[0m [0mremove_s_dismantlable_edge[0m[0;34m([0m[0mgraph_aux[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    438[0m         [0;32mif[0m [0mn[0m [0;34m==[0m [0mgraph_aux[0m[0;34m.[0m[0msize[0m[0;34m([0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    439[0m             [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/pycliques/src/pycliques/dominated.py[0m in [0;36mremove_s_dismantlable_edge[0;34m(graph)[0m
-[1;32m    411[0m         [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    412[0m     [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 413[0;31m         [0mgraph_aux[0m[0;34m.[0m[0mremove_edge[0m[0;34m([0m[0;34m*[0m[0mx[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    414[0m         [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    415[0m [0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/lib/python3.9/site-packages/networkx/classes/function.py[0m in [0;36mfrozen[0;34m(*args, **kwargs)[0m
-[1;32m    154[0m [0;32mdef[0m [0mfrozen[0m[0;34m([0m[0;34m*[0m[0margs[0m[0;34m,[0m [0;34m**[0m[0mkwargs[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    155[0m     [0;34m"""Dummy method for raising errors when trying to modify frozen graphs"""[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 156[0;31m     [0;32mraise[0m [0mnx[0m[0;34m.[0m[0mNetworkXError[0m[0;34m([0m[0;34m"Frozen graph can't be modified"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    157[0m [0;34m[0m[0m
-[1;32m    158[0m [0;34m[0m[0m
-
-[0;31mNetworkXError[0m: Frozen graph can't be modified
-#+end_example
-:END:
-
 #+begin_src jupyter-python
 nx.draw(sssh, with_labels=True)
 #+end_src
@@ -713,47 +2335,6 @@ nx.draw(sssh, with_labels=True)
 #+begin_src jupyter-python
 simplify_ht(sssh)
 #+end_src
-
-#+RESULTS[73252ffcfdcdec4db1a5c26f9b828f2e3dee6808]:
-:RESULTS:
-# [goto error]
-#+begin_example
-[0;31m[0m
-[0;31mNetworkXError[0mTraceback (most recent call last)
-[0;32m<ipython-input-31-3503d678c3ec>[0m in [0;36m<module>[0;34m[0m
-[0;32m----> 1[0;31m [0msimplify_ht[0m[0;34m([0m[0msssh[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m
-[0;32m~/Dropbox/python/homotopy-type-of-small-graphs/homsmall.py[0m in [0;36msimplify_ht[0;34m(graph)[0m
-[1;32m     27[0m     [0;34m"""Simplifies the graph for homotopy type purposes"""[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     28[0m     [0mv_graph[0m [0;34m=[0m [0mcomplete_s_collapse[0m[0;34m([0m[0mgraph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m---> 29[0;31m     [0mev_graph[0m [0;34m=[0m [0mcomplete_s_collapse_edges[0m[0;34m([0m[0mv_graph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m     30[0m     [0mvev_graph[0m [0;34m=[0m [0mcomplete_s_collapse[0m[0;34m([0m[0mev_graph[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     31[0m     [0;32mreturn[0m [0mvev_graph[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/pycliques/src/pycliques/dominated.py[0m in [0;36mcomplete_s_collapse_edges[0;34m(graph)[0m
-[1;32m    435[0m     [0;32mwhile[0m [0;32mTrue[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    436[0m         [0mn[0m [0;34m=[0m [0mgraph_aux[0m[0;34m.[0m[0msize[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 437[0;31m         [0mgraph_aux[0m [0;34m=[0m [0mremove_s_dismantlable_edge[0m[0;34m([0m[0mgraph_aux[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    438[0m         [0;32mif[0m [0mn[0m [0;34m==[0m [0mgraph_aux[0m[0;34m.[0m[0msize[0m[0;34m([0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    439[0m             [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/pycliques/src/pycliques/dominated.py[0m in [0;36mremove_s_dismantlable_edge[0;34m(graph)[0m
-[1;32m    411[0m         [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    412[0m     [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 413[0;31m         [0mgraph_aux[0m[0;34m.[0m[0mremove_edge[0m[0;34m([0m[0;34m*[0m[0mx[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    414[0m         [0;32mreturn[0m [0mgraph_aux[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    415[0m [0;34m[0m[0m
-
-[0;32m~/Python/pycliques-dev/lib/python3.9/site-packages/networkx/classes/function.py[0m in [0;36mfrozen[0;34m(*args, **kwargs)[0m
-[1;32m    154[0m [0;32mdef[0m [0mfrozen[0m[0;34m([0m[0;34m*[0m[0margs[0m[0;34m,[0m [0;34m**[0m[0mkwargs[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    155[0m     [0;34m"""Dummy method for raising errors when trying to modify frozen graphs"""[0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 156[0;31m     [0;32mraise[0m [0mnx[0m[0;34m.[0m[0mNetworkXError[0m[0;34m([0m[0;34m"Frozen graph can't be modified"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    157[0m [0;34m[0m[0m
-[1;32m    158[0m [0;34m[0m[0m
-
-[0;31mNetworkXError[0m: Frozen graph can't be modified
-#+end_example
-:END:
 
 #+begin_src jupyter-python
 sssh2 = nx.convert_node_labels_to_integers(sssh)
@@ -1028,6 +2609,28 @@ nx.draw(kh, with_labels=True)
 
 #+RESULTS[29cf14ac016877cfff7b226b8bdef6c3445a24ba]:
 [[file:./.ob-jupyter/e0225f87137cc71d178ab2f29a12098f7733402a.png]]
+
+* From thesis of Andrés Carnero
+
+See [[id:d2a963d3-0077-4cf5-9fd2-3099e97ccf56][Thesis of Andrés Carnero]]
+
+#+begin_src jupyter-python
+import networkx as nx
+g = nx.tensor_product(nx.cycle_graph(7), nx.complete_graph(3))
+cg = nx.complement(g)
+nx.draw(cg, with_labels=True)
+#+end_src
+
+#+RESULTS[31094c5b6f4b3728864e3c5d5c62ee3758c540fd]:
+[[file:./.ob-jupyter/7e644bf591e74bcc5cd22469e185f8b872112027.png]]
+
+#+begin_src jupyter-python
+homotopy_type(cg)
+#+end_src
+
+#+RESULTS[badda7e2aa6c69094586ac638c3f071b41f4bccc]:
+: \(\vee_{14}S^{3}\)
+
 
 
 * COMMENT Local Variables

@@ -13,7 +13,6 @@ from pycliques.simplicial import (
     SimplicialComplex,
     clique_complex)
 from pycliques.dominated import completely_pared_graph as p
-from pycliques.dominated import completely_pared_graph
 from pycliques.dominated import (
     has_dominated_vertex,
     complete_s_collapse,
